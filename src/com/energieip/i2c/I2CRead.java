@@ -60,6 +60,37 @@ public class I2CRead {
         // in this example we will use the default address for the TSL2561 chip which is 0x39.
         device = i2c.getDevice(PD69200_ADDR);
         
+        byte[] tab = new byte[15];
+        
+        // get systel status
+        tab[0] = 0x02; // request
+        tab[1] = 0x00; // echo
+        tab[2] = 0x07;
+        tab[3] = 0x3D;
+        tab[4] = 0x4E;
+        tab[5] = 0x4E;
+        tab[6] = 0x4E;
+        tab[7] = 0x4E;
+        tab[8] = 0x4E;
+        tab[9] = 0x4E;
+        tab[10] = 0x4E;
+        tab[11] = 0x4E;
+        tab[12] = 0x4E;
+        tab[13] = 0x00;
+        tab[14] = 0x00;
+        
+        tab = checksum(tab);
+        
+        device.write(tab);
+        
+        byte[] buf = new byte[15];
+        int res = device.read(buf, 0, 15);
+        
+        System.out.println("buf=" + buf);
+        
+        for (int i = 0; i < buf.length; i++) {
+        	System.out.println("buf["+i+"]=" + buf[i]);
+		}
         
         
         /*
@@ -91,4 +122,27 @@ public class I2CRead {
         device.write(TSL2561_REG_CONTROL, TSL2561_POWER_DOWN);
         */
     }
+
+
+
+	private static byte[] checksum(byte[] tab) {
+		
+		int checksum = 0;
+		
+		for (int i = 0; i < tab.length-2; i++) {
+			
+				System.out.println("i=" + i + " checksum=" + checksum);
+				checksum = checksum + tab[i];
+		}
+		
+		short checksum_short = (short) checksum;
+		
+		System.out.println("checksum short=" + checksum_short);
+		
+		tab[13] = (byte)(checksum_short & 0xff);
+		tab[14] = (byte)((checksum_short >> 8) & 0xff);
+		
+		return tab;
+		
+	}
 }
