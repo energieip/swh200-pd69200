@@ -58,6 +58,8 @@ public class PD69200 implements Runnable {
 			System.out.println("Working with I2C bus " + bus.getBusNumber());
 			i2c = I2CFactory.getInstance(bus.getBusNumber());
 			device = i2c.getDevice(PD69200_ADDR);
+			
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -126,13 +128,59 @@ public class PD69200 implements Runnable {
 		tab[0] = (byte) 0x00; // command
 		tab[1] = echo;
 		tab[2] = (byte) 0x05; // channel
-		tab[3] = (byte) 0x00; // PortFullInit4Pair
+		tab[3] = (byte) 0xAF; // PortFullInit4Pair
 		tab[4] = (byte) 0x80; // CH number or 0x80 for all
 		tab[5] = (byte) 0x4E; // default (2 nibbles)
-		tab[6] = (byte) 0xFF; //
-		tab[7] = (byte) 0xFE; //
-		tab[8] = (byte) 0x4E;
-		tab[9] = (byte) 0x4E;
+		tab[6] = (byte) 0xFF; // PPL4Pair
+		tab[7] = (byte) 0xFE; // PPL4Pair
+		tab[8] = (byte) 0x4E; // Priority
+		tab[9] = (byte) 0x02; // PoH 
+		tab[10] = (byte) 0x00; // Sum_as_TPPL, Energy management
+		tab[11] = (byte) 0x02; //PortPM2
+		tab[12] = (byte) 0x4E;
+		tab[13] = (byte) 0x00;
+		tab[14] = (byte) 0x00;
+
+		tab = checksum(tab);
+
+		return tab;
+	}
+
+	private byte[] pse_4_pair_power_limit(byte echo) {
+
+		tab[0] = (byte) 0x00; // command
+		tab[1] = echo;
+		tab[2] = (byte) 0x05; // channel
+		tab[3] = (byte) 0xAD; // Supply4Pair
+		tab[4] = (byte) 0x80; // CH number or 0x80 for all
+		tab[5] = (byte) 0xFF; // PPL4Pair
+		tab[6] = (byte) 0xFE; // PPL4Pair
+		tab[7] = (byte) 0x4E;  
+		tab[8] = (byte) 0x4E; 
+		tab[9] = (byte) 0x4E; 
+		tab[10] = (byte) 0x4E;
+		tab[11] = (byte) 0x4E;
+		tab[12] = (byte) 0x4E;
+		tab[13] = (byte) 0x00;
+		tab[14] = (byte) 0x00;
+
+		tab = checksum(tab);
+
+		return tab;
+	}
+	
+	private byte[] pse_4_pair_temporary_power_limit(byte echo) {
+
+		tab[0] = (byte) 0x00; // command
+		tab[1] = echo;
+		tab[2] = (byte) 0x05; // channel
+		tab[3] = (byte) 0xAE; // Supply4Pair
+		tab[4] = (byte) 0x80; // CH number or 0x80 for all
+		tab[5] = (byte) 0xFF; // PPL4Pair
+		tab[6] = (byte) 0xFE; // PPL4Pair
+		tab[7] = (byte) 0x4E;  
+		tab[8] = (byte) 0x4E; 
+		tab[9] = (byte) 0x4E; 
 		tab[10] = (byte) 0x4E;
 		tab[11] = (byte) 0x4E;
 		tab[12] = (byte) 0x4E;
@@ -144,12 +192,6 @@ public class PD69200 implements Runnable {
 		return tab;
 	}
 
-	/**
-	 * Save system settings
-	 * 
-	 * @param echo
-	 * @return
-	 */
 	private byte[] pse_save_system_settings(byte echo) {
 
 		// must wait 50ms before using I2C when sending this command
@@ -176,12 +218,6 @@ public class PD69200 implements Runnable {
 		return tab;
 	}
 
-	/**
-	 * get system status
-	 * 
-	 * @param echo
-	 * @return
-	 */
 	private byte[] pse_get_system_status(byte echo) {
 
 		tab[0] = (byte) 0x2; // request
@@ -205,6 +241,191 @@ public class PD69200 implements Runnable {
 		return tab;
 	}
 
+	private byte[] get_total_power(byte echo) {
+
+		tab[0] = (byte) 0x02; // command
+		tab[1] = echo;
+		tab[2] = (byte) 0x07; // global
+		tab[3] = (byte) 0x0B; // Supply
+		tab[4] = (byte) 0x60; // Total Power
+		tab[5] = (byte) 0x4E; 
+		tab[6] = (byte) 0x4E; 
+		tab[7] = (byte) 0x4E;  
+		tab[8] = (byte) 0x4E; 
+		tab[9] = (byte) 0x4E; 
+		tab[10] = (byte) 0x4E;
+		tab[11] = (byte) 0x4E;
+		tab[12] = (byte) 0x4E;
+		tab[13] = (byte) 0x00;
+		tab[14] = (byte) 0x00;
+
+		tab = checksum(tab);
+
+		return tab;
+	}
+
+	private byte[] get_power_supply_voltage(byte echo) {
+
+		tab[0] = (byte) 0x02; // command
+		tab[1] = echo;
+		tab[2] = (byte) 0x07; // global
+		tab[3] = (byte) 0x0B; // Supply
+		tab[4] = (byte) 0x1A; // Measurement
+		tab[5] = (byte) 0x4E; 
+		tab[6] = (byte) 0x4E; 
+		tab[7] = (byte) 0x4E;  
+		tab[8] = (byte) 0x4E; 
+		tab[9] = (byte) 0x4E; 
+		tab[10] = (byte) 0x4E;
+		tab[11] = (byte) 0x4E;
+		tab[12] = (byte) 0x4E;
+		tab[13] = (byte) 0x00;
+		tab[14] = (byte) 0x00;
+
+		tab = checksum(tab);
+
+		return tab;
+	}
+	
+	private byte[] get_all_4_pair_port_power_1(byte echo) {
+
+		tab[0] = (byte) 0x02; // command
+		tab[1] = echo;
+		tab[2] = (byte) 0x07; // global
+		tab[3] = (byte) 0xB0; // #1
+		tab[4] = (byte) 0x4E;
+		tab[5] = (byte) 0x4E; 
+		tab[6] = (byte) 0x4E; 
+		tab[7] = (byte) 0x4E;  
+		tab[8] = (byte) 0x4E; 
+		tab[9] = (byte) 0x4E; 
+		tab[10] = (byte) 0x4E;
+		tab[11] = (byte) 0x4E;
+		tab[12] = (byte) 0x4E;
+		tab[13] = (byte) 0x00;
+		tab[14] = (byte) 0x00;
+
+		tab = checksum(tab);
+
+		return tab;
+	}
+	
+	private byte[] get_all_4_pair_port_power_2(byte echo) {
+
+		tab[0] = (byte) 0x02; // command
+		tab[1] = echo;
+		tab[2] = (byte) 0x07; // global
+		tab[3] = (byte) 0xB1; // #2
+		tab[4] = (byte) 0x4E;
+		tab[5] = (byte) 0x4E; 
+		tab[6] = (byte) 0x4E; 
+		tab[7] = (byte) 0x4E;  
+		tab[8] = (byte) 0x4E; 
+		tab[9] = (byte) 0x4E; 
+		tab[10] = (byte) 0x4E;
+		tab[11] = (byte) 0x4E;
+		tab[12] = (byte) 0x4E;
+		tab[13] = (byte) 0x00;
+		tab[14] = (byte) 0x00;
+
+		tab = checksum(tab);
+
+		return tab;
+	}
+	
+	private byte[] get_all_4_pair_port_power_3(byte echo) {
+
+		tab[0] = (byte) 0x02; // command
+		tab[1] = echo;
+		tab[2] = (byte) 0x07; // global
+		tab[3] = (byte) 0xB2; // #3
+		tab[4] = (byte) 0x4E;
+		tab[5] = (byte) 0x4E; 
+		tab[6] = (byte) 0x4E; 
+		tab[7] = (byte) 0x4E;  
+		tab[8] = (byte) 0x4E; 
+		tab[9] = (byte) 0x4E; 
+		tab[10] = (byte) 0x4E;
+		tab[11] = (byte) 0x4E;
+		tab[12] = (byte) 0x4E;
+		tab[13] = (byte) 0x00;
+		tab[14] = (byte) 0x00;
+
+		tab = checksum(tab);
+
+		return tab;
+	}
+
+	private byte[] get_all_4_pair_port_power_4(byte echo) {
+
+		tab[0] = (byte) 0x02; // command
+		tab[1] = echo;
+		tab[2] = (byte) 0x07; // global
+		tab[3] = (byte) 0xB3; // #4
+		tab[4] = (byte) 0x4E;
+		tab[5] = (byte) 0x4E; 
+		tab[6] = (byte) 0x4E; 
+		tab[7] = (byte) 0x4E;  
+		tab[8] = (byte) 0x4E; 
+		tab[9] = (byte) 0x4E; 
+		tab[10] = (byte) 0x4E;
+		tab[11] = (byte) 0x4E;
+		tab[12] = (byte) 0x4E;
+		tab[13] = (byte) 0x00;
+		tab[14] = (byte) 0x00;
+
+		tab = checksum(tab);
+
+		return tab;
+	}
+	
+	private byte[] get_all_4_pair_port_power_5(byte echo) {
+
+		tab[0] = (byte) 0x02; // command
+		tab[1] = echo;
+		tab[2] = (byte) 0x07; // global
+		tab[3] = (byte) 0xB4; // #5
+		tab[4] = (byte) 0x4E;
+		tab[5] = (byte) 0x4E; 
+		tab[6] = (byte) 0x4E; 
+		tab[7] = (byte) 0x4E;  
+		tab[8] = (byte) 0x4E; 
+		tab[9] = (byte) 0x4E; 
+		tab[10] = (byte) 0x4E;
+		tab[11] = (byte) 0x4E;
+		tab[12] = (byte) 0x4E;
+		tab[13] = (byte) 0x00;
+		tab[14] = (byte) 0x00;
+
+		tab = checksum(tab);
+
+		return tab;
+	}
+	
+	private byte[] get_4_pair_port_power(byte echo, byte port) {
+
+		tab[0] = (byte) 0x02; // command
+		tab[1] = echo;
+		tab[2] = (byte) 0x01; // 4 pairs 
+		tab[3] =  port;  
+		tab[4] = (byte) 0x4E;
+		tab[5] = (byte) 0x4E; 
+		tab[6] = (byte) 0x4E; 
+		tab[7] = (byte) 0x4E;  
+		tab[8] = (byte) 0x4E; 
+		tab[9] = (byte) 0x4E; 
+		tab[10] = (byte) 0x4E;
+		tab[11] = (byte) 0x4E;
+		tab[12] = (byte) 0x4E;
+		tab[13] = (byte) 0x00;
+		tab[14] = (byte) 0x00;
+
+		tab = checksum(tab);
+
+		return tab;
+	}
+
+	
 	/**
 	 * This method does the checksum
 	 * 
