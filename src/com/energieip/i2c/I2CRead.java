@@ -86,7 +86,7 @@ public class I2CRead {
         byte[] buf = new byte[15];
         int res = device.read(buf, 0, 15);
         
-        System.out.println("buf=" + buf);
+        System.out.println("buf=" + buf + " res=" + res);
         
         for (int i = 0; i < buf.length; i++) {
         	System.out.println("buf["+i+"]=" + buf[i]);
