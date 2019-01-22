@@ -83,15 +83,19 @@ public class I2CRead {
         
         device.write(tab);
         
-        byte[] buf = new byte[15];
-        int res = device.read(buf, 0, 15);
+        //byte[] buf = new byte[15];
+        byte[] buf = new byte[256];
+        while(true){
+        	int res = device.read(buf, 0, 1);
+        	System.out.println("res=" + res + " buf=" + "buf["+res+"]=" + buf[res] + " buf[0]="+buf[0]);
+        }
+        //System.out.println("buf=" + buf + " res=" + res);
         
-        System.out.println("buf=" + buf + " res=" + res);
-        
+        /*
         for (int i = 0; i < buf.length; i++) {
         	System.out.println("buf["+i+"]=" + buf[i]);
 		}
-        
+        */
         
         /*
         // next, lets perform am I2C READ operation to the TSL2561 chip
