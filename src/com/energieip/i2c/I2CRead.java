@@ -97,7 +97,7 @@ public class I2CRead {
         } // while
         
         for (int j = 0; j < buf.length; j++) {
-			System.out.println("buf["+j+"]=" + Integer.toHexString(buf[j]));
+			System.out.println("buf["+j+"]=" + (buf[j]));
 		}
         
         
@@ -155,8 +155,8 @@ public class I2CRead {
 		
 		System.out.println("checksum short=" + checksum_short);
 		
-		tab[13] = (byte)(checksum_short & 0xff);
-		tab[14] = (byte)((checksum_short >> 8) & 0xff);
+		tab[14] = (byte)(checksum_short & 0xff);
+		tab[13] = (byte)((checksum_short >> 8) & 0xff);
 		
 		return tab;
 		
