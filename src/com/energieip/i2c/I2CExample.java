@@ -36,10 +36,9 @@ import com.pi4j.util.Console;
  */
 public class I2CExample {
 
-    // TSL2561 I2C address
-    public static final int TSL2561_ADDR = 0x39; // address pin not connected (FLOATING)
-    //public static final int TSL2561_ADDR = 0x29; // address pin connect to GND
-    //public static final int TSL2561_ADDR = 0x49; // address pin connected to VDD
+    // PD69 I2C address
+    public static final int PD69200_ADDR = 0x3C;
+
 
     // TSL2561 registers
     public static final byte TSL2561_REG_ID = (byte)0x8A;
@@ -98,8 +97,9 @@ public class I2CExample {
 
         // create an I2C device for an individual device on the bus that you want to communicate with
         // in this example we will use the default address for the TSL2561 chip which is 0x39.
-        I2CDevice device = i2c.getDevice(TSL2561_ADDR);
-
+        I2CDevice device = i2c.getDevice(PD69200_ADDR);
+        
+        /*
         // next, lets perform am I2C READ operation to the TSL2561 chip
         // we will read the 'ID' register from the chip to get its part number and silicon revision number
         console.println("... reading ID register from TSL2561");
@@ -126,5 +126,6 @@ public class I2CExample {
         // before we exit, lets not forget to power down light sensor
         console.println("... powering down TSL2561");
         device.write(TSL2561_REG_CONTROL, TSL2561_POWER_DOWN);
+        */
     }
 }
