@@ -10,21 +10,16 @@ import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
 import com.pi4j.platform.PlatformAlreadyAssignedException;
 import com.pi4j.util.Console;
 
-public class I2CExample {
+public class I2CRead {
 
-    // PD69200 I2C address
+	private static I2CBus bus;
+	private static I2CBus i2c;
+	private static I2CDevice device;
+   
+	// PD69200 I2C address
     public static final int PD69200_ADDR = 0x3C;
 
-
-    // TSL2561 registers
-    public static final byte TSL2561_REG_ID = (byte)0x8A;
-    public static final byte TSL2561_REG_DATA_0 = (byte)0x8C;
-    public static final byte TSL2561_REG_DATA_1 = (byte)0x8E;
-    public static final byte TSL2561_REG_CONTROL = (byte)0x80;
-
-    // TSL2561 power control values
-    public static final byte TSL2561_POWER_UP = (byte)0x03;
-    public static final byte TSL2561_POWER_DOWN = (byte)0x00;
+    
 
     /**
      * Program Main Entry Point
@@ -42,38 +37,30 @@ public class I2CExample {
         final Console console = new Console();
 
         // print program title/header
-        console.title("<-- The Pi4J Project -->", "I2C Example");
+        console.title("<-- The Pi4J Project -->", "I2C Read");
 
         // allow for user to exit program using CTRL-C
         console.promptForExit();
 
         // fetch all available busses
-        try {
+        
             int[] ids = I2CFactory.getBusIds();
             console.println("Found follow I2C busses: " + Arrays.toString(ids));
-        } catch (IOException exception) {
-            console.println("I/O error during fetch of I2C busses occurred");
-        }
 
-        // find available busses
-        for (int number = I2CBus.BUS_0; number <= I2CBus.BUS_17; ++number) {
-            try {
-                @SuppressWarnings("unused")
-				I2CBus bus = I2CFactory.getInstance(number);
-                console.println("Supported I2C bus " + number + " found");
-            } catch (IOException exception) {
-                console.println("I/O error on I2C bus " + number + " occurred");
-            } catch (UnsupportedBusNumberException exception) {
-                console.println("Unsupported I2C bus " + number + " required");
-            }
-        }
+
+				bus = I2CFactory.getInstance( I2CBus.BUS_1);
+				console.println("Working with I2C bus " + bus.getBusNumber());
+         
 
         // get the I2C bus to communicate on
-        I2CBus i2c = I2CFactory.getInstance(I2CBus.BUS_1);
+        //I2CBus i2c = I2CFactory.getInstance(I2CBus.BUS_1);
+		i2c = I2CFactory.getInstance(bus.getBusNumber());
 
         // create an I2C device for an individual device on the bus that you want to communicate with
         // in this example we will use the default address for the TSL2561 chip which is 0x39.
-        I2CDevice device = i2c.getDevice(PD69200_ADDR);
+        device = i2c.getDevice(PD69200_ADDR);
+        
+        
         
         /*
         // next, lets perform am I2C READ operation to the TSL2561 chip
