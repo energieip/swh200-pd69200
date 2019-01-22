@@ -84,10 +84,17 @@ public class I2CRead {
         device.write(tab);
         
         //byte[] buf = new byte[15];
-        byte[] buf = new byte[256];
+        byte[] buf = new byte[15];
+        int i=1;
         while(true){
         	int res = device.read(buf, 0, 1);
-        	System.out.println("res=" + res + " buf=" + "buf["+res+"]=" + buf[res] + " buf[0]="+buf[0]);
+        	if(buf[0]!=0){
+        		int pos = device.read(buf, 1, 14);
+        		System.out.println("go :" + i + " pos:" + pos);
+        		i++;
+        		if(i>15){break;}
+        	}
+        	//System.out.println("res=" + res + " buf=" + "buf["+res+"]=" + buf[res] + " buf[0]="+buf[0]);
         }
         //System.out.println("buf=" + buf + " res=" + res);
         
