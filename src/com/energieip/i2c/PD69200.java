@@ -48,8 +48,8 @@ public class PD69200 implements Runnable {
 		try {
 
 			initi2c();
-			resetPSE();
-			//initPSE();
+			//resetPSE();
+			initPSE();
 
 			readThread = new Thread(this);
 			readThread.start();
@@ -73,16 +73,16 @@ public class PD69200 implements Runnable {
 		System.out.println("[WAIT] Initializing PSE...");
 
 		// enable channels
-		pse_enable_channels(get_echo());
-		Thread.sleep(100); // wait 100 ms
+		//pse_enable_channels(get_echo());
+		//Thread.sleep(100); // wait 100 ms
 		
 		// enable 4 pairs and PoH
-		pse_set_4_pair_ports_parameters(get_echo());
-		Thread.sleep(100); // wait 100 ms
+		//pse_set_4_pair_ports_parameters(get_echo());
+		//Thread.sleep(100); // wait 100 ms
 
 		// set power limit to 62W (0XFF 0xFE)
-		pse_set_4_pair_power_limit(get_echo());
-		Thread.sleep(100); // wait 100 ms
+		//pse_set_4_pair_power_limit(get_echo());
+		//Thread.sleep(100); // wait 100 ms
 		
 		pse_force_power(get_echo());
 		Thread.sleep(100); // wait 100 ms
@@ -103,9 +103,9 @@ public class PD69200 implements Runnable {
 		
 		System.out.println("[OK] PSE initialized");
 		
-		pse_save_settings(get_echo());
-		Thread.sleep(50); // wait 50 ms
-		int i = 1;
+		//pse_save_settings(get_echo());
+		//Thread.sleep(50); // wait 50 ms
+		//int i = 1;
 		System.out.println("[WAIT] Waiting for system backup ACK...");
 		/*
 		while (true) {
