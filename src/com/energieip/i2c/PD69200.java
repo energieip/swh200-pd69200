@@ -48,7 +48,8 @@ public class PD69200 implements Runnable {
 		try {
 
 			initi2c();
-			initPSE();
+			resetPSE();
+			//initPSE();
 
 			readThread = new Thread(this);
 			readThread.start();
@@ -144,6 +145,13 @@ public class PD69200 implements Runnable {
 		}
 	} // end of init
 
+	
+	private void resetPSE() throws InterruptedException, IOException {
+		System.out.println("[WAIT] resetting PSE...");
+		pse_reset_to_factory_default(get_echo());
+		Thread.sleep(100); // wait 100 ms
+	}
+	
 	/**
 	 * set PSE unlimited
 	 * 
@@ -158,6 +166,29 @@ public class PD69200 implements Runnable {
 		tab[3] = (byte) 0x51; // force power
 		tab[4] = (byte) 0x80; // all ports
 		tab[5] = (byte) 0x01; // force connection
+		tab[6] = (byte) 0x4E;
+		tab[7] = (byte) 0x4E;
+		tab[8] = (byte) 0x4E;
+		tab[9] = (byte) 0x4E;
+		tab[10] = (byte) 0x4E;
+		tab[11] = (byte) 0x4E;
+		tab[12] = (byte) 0x4E;
+		tab[13] = (byte) 0x00;
+		tab[14] = (byte) 0x00;
+
+		tab = checksum(tab);
+
+		return tab;
+	}
+	
+	private byte[] pse_reset_to_factory_default(byte echo) {
+
+		tab[0] = (byte) 0x01; // program
+		tab[1] = echo;
+		tab[2] = (byte) 0x2D; 
+		tab[3] = (byte) 0x4E; 
+		tab[4] = (byte) 0x4E; 
+		tab[5] = (byte) 0x4E; 
 		tab[6] = (byte) 0x4E;
 		tab[7] = (byte) 0x4E;
 		tab[8] = (byte) 0x4E;
