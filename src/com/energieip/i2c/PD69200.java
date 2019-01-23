@@ -8,7 +8,6 @@ import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
 
-
 public class PD69200 implements Runnable {
 
 	// I2C generic
@@ -20,14 +19,14 @@ public class PD69200 implements Runnable {
 	private static final int PD69200_ADDR = 0x3C;
 
 	// message tab
-	private byte[] tab = new byte[15];
-	byte echo = 0;
-	
-	//thread
-	Thread readThread;
-	int SCAN_RATE = 1000; // in milliseconds
+	private byte[] tab = new byte[15]; // output buffer tab
+	private byte echo = 0;
+	private byte[] buf = new byte[15]; // input buffer tab
 
-	
+	// thread
+	Thread readThread;
+	private int SCAN_RATE = 1000; // in milliseconds
+
 	/**
 	 * Main entry Point
 	 * 
@@ -41,9 +40,9 @@ public class PD69200 implements Runnable {
 	 * Default constructor
 	 */
 	public PD69200() {
-		
+
 		try {
-			
+
 			initi2c();
 			initPSE();
 
@@ -55,24 +54,24 @@ public class PD69200 implements Runnable {
 			e.printStackTrace();
 		}
 	} // end of constructor
-	
-	
+
 	/**
 	 * initialize PSE
-	 * @throws InterruptedException 
+	 * 
+	 * @throws InterruptedException
 	 */
 	private void initPSE() throws InterruptedException {
 		System.out.println("Initializing PSE...");
-		
+
 		// enable 4 pairs and PoH
 		pse_set_4_pair_ports_parameters(echo);
 		Thread.sleep(100); // wait 100 ms
-		
+
 		// set power limit to 62W (0XFF 0xFE)
 		pse_set_4_pair_power_limit(get_echo());
 		Thread.sleep(100); // wait 100 ms
 	}
-	
+
 	/**
 	 * initialize I2C
 	 */
@@ -86,8 +85,7 @@ public class PD69200 implements Runnable {
 			System.out.println("Working with I2C bus " + bus.getBusNumber());
 			i2c = I2CFactory.getInstance(bus.getBusNumber());
 			device = i2c.getDevice(PD69200_ADDR);
-			
-			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -162,9 +160,9 @@ public class PD69200 implements Runnable {
 		tab[6] = (byte) 0xFF; // PPL4Pair
 		tab[7] = (byte) 0xFE; // PPL4Pair
 		tab[8] = (byte) 0x4E; // Priority
-		tab[9] = (byte) 0x02; // PoH 
+		tab[9] = (byte) 0x02; // PoH
 		tab[10] = (byte) 0x00; // Sum_as_TPPL, Energy management
-		tab[11] = (byte) 0x02; //PortPM2
+		tab[11] = (byte) 0x02; // PortPM2
 		tab[12] = (byte) 0x4E;
 		tab[13] = (byte) 0x00;
 		tab[14] = (byte) 0x00;
@@ -183,9 +181,9 @@ public class PD69200 implements Runnable {
 		tab[4] = (byte) 0x80; // CH number or 0x80 for all
 		tab[5] = (byte) 0xFF; // PPL4Pair
 		tab[6] = (byte) 0xFE; // PPL4Pair
-		tab[7] = (byte) 0x4E;  
-		tab[8] = (byte) 0x4E; 
-		tab[9] = (byte) 0x4E; 
+		tab[7] = (byte) 0x4E;
+		tab[8] = (byte) 0x4E;
+		tab[9] = (byte) 0x4E;
 		tab[10] = (byte) 0x4E;
 		tab[11] = (byte) 0x4E;
 		tab[12] = (byte) 0x4E;
@@ -196,7 +194,7 @@ public class PD69200 implements Runnable {
 
 		return tab;
 	}
-	
+
 	private byte[] pse_set_4_pair_temporary_power_limit(byte echo) {
 
 		tab[0] = (byte) 0x00; // command
@@ -206,9 +204,9 @@ public class PD69200 implements Runnable {
 		tab[4] = (byte) 0x80; // CH number or 0x80 for all
 		tab[5] = (byte) 0xFF; // PPL4Pair
 		tab[6] = (byte) 0xFE; // PPL4Pair
-		tab[7] = (byte) 0x4E;  
-		tab[8] = (byte) 0x4E; 
-		tab[9] = (byte) 0x4E; 
+		tab[7] = (byte) 0x4E;
+		tab[8] = (byte) 0x4E;
+		tab[9] = (byte) 0x4E;
 		tab[10] = (byte) 0x4E;
 		tab[11] = (byte) 0x4E;
 		tab[12] = (byte) 0x4E;
@@ -276,11 +274,11 @@ public class PD69200 implements Runnable {
 		tab[2] = (byte) 0x07; // global
 		tab[3] = (byte) 0x0B; // Supply
 		tab[4] = (byte) 0x60; // Total Power
-		tab[5] = (byte) 0x4E; 
-		tab[6] = (byte) 0x4E; 
-		tab[7] = (byte) 0x4E;  
-		tab[8] = (byte) 0x4E; 
-		tab[9] = (byte) 0x4E; 
+		tab[5] = (byte) 0x4E;
+		tab[6] = (byte) 0x4E;
+		tab[7] = (byte) 0x4E;
+		tab[8] = (byte) 0x4E;
+		tab[9] = (byte) 0x4E;
 		tab[10] = (byte) 0x4E;
 		tab[11] = (byte) 0x4E;
 		tab[12] = (byte) 0x4E;
@@ -299,11 +297,11 @@ public class PD69200 implements Runnable {
 		tab[2] = (byte) 0x07; // global
 		tab[3] = (byte) 0x0B; // Supply
 		tab[4] = (byte) 0x1A; // Measurement
-		tab[5] = (byte) 0x4E; 
-		tab[6] = (byte) 0x4E; 
-		tab[7] = (byte) 0x4E;  
-		tab[8] = (byte) 0x4E; 
-		tab[9] = (byte) 0x4E; 
+		tab[5] = (byte) 0x4E;
+		tab[6] = (byte) 0x4E;
+		tab[7] = (byte) 0x4E;
+		tab[8] = (byte) 0x4E;
+		tab[9] = (byte) 0x4E;
 		tab[10] = (byte) 0x4E;
 		tab[11] = (byte) 0x4E;
 		tab[12] = (byte) 0x4E;
@@ -314,7 +312,7 @@ public class PD69200 implements Runnable {
 
 		return tab;
 	}
-	
+
 	private byte[] pse_get_all_4_pair_port_power_1(byte echo) {
 
 		tab[0] = (byte) 0x02; // command
@@ -322,11 +320,11 @@ public class PD69200 implements Runnable {
 		tab[2] = (byte) 0x07; // global
 		tab[3] = (byte) 0xB0; // #1
 		tab[4] = (byte) 0x4E;
-		tab[5] = (byte) 0x4E; 
-		tab[6] = (byte) 0x4E; 
-		tab[7] = (byte) 0x4E;  
-		tab[8] = (byte) 0x4E; 
-		tab[9] = (byte) 0x4E; 
+		tab[5] = (byte) 0x4E;
+		tab[6] = (byte) 0x4E;
+		tab[7] = (byte) 0x4E;
+		tab[8] = (byte) 0x4E;
+		tab[9] = (byte) 0x4E;
 		tab[10] = (byte) 0x4E;
 		tab[11] = (byte) 0x4E;
 		tab[12] = (byte) 0x4E;
@@ -337,7 +335,7 @@ public class PD69200 implements Runnable {
 
 		return tab;
 	}
-	
+
 	private byte[] pse_get_all_4_pair_port_power_2(byte echo) {
 
 		tab[0] = (byte) 0x02; // command
@@ -345,11 +343,11 @@ public class PD69200 implements Runnable {
 		tab[2] = (byte) 0x07; // global
 		tab[3] = (byte) 0xB1; // #2
 		tab[4] = (byte) 0x4E;
-		tab[5] = (byte) 0x4E; 
-		tab[6] = (byte) 0x4E; 
-		tab[7] = (byte) 0x4E;  
-		tab[8] = (byte) 0x4E; 
-		tab[9] = (byte) 0x4E; 
+		tab[5] = (byte) 0x4E;
+		tab[6] = (byte) 0x4E;
+		tab[7] = (byte) 0x4E;
+		tab[8] = (byte) 0x4E;
+		tab[9] = (byte) 0x4E;
 		tab[10] = (byte) 0x4E;
 		tab[11] = (byte) 0x4E;
 		tab[12] = (byte) 0x4E;
@@ -360,7 +358,7 @@ public class PD69200 implements Runnable {
 
 		return tab;
 	}
-	
+
 	private byte[] pse_get_all_4_pair_port_power_3(byte echo) {
 
 		tab[0] = (byte) 0x02; // command
@@ -368,11 +366,11 @@ public class PD69200 implements Runnable {
 		tab[2] = (byte) 0x07; // global
 		tab[3] = (byte) 0xB2; // #3
 		tab[4] = (byte) 0x4E;
-		tab[5] = (byte) 0x4E; 
-		tab[6] = (byte) 0x4E; 
-		tab[7] = (byte) 0x4E;  
-		tab[8] = (byte) 0x4E; 
-		tab[9] = (byte) 0x4E; 
+		tab[5] = (byte) 0x4E;
+		tab[6] = (byte) 0x4E;
+		tab[7] = (byte) 0x4E;
+		tab[8] = (byte) 0x4E;
+		tab[9] = (byte) 0x4E;
 		tab[10] = (byte) 0x4E;
 		tab[11] = (byte) 0x4E;
 		tab[12] = (byte) 0x4E;
@@ -391,11 +389,11 @@ public class PD69200 implements Runnable {
 		tab[2] = (byte) 0x07; // global
 		tab[3] = (byte) 0xB3; // #4
 		tab[4] = (byte) 0x4E;
-		tab[5] = (byte) 0x4E; 
-		tab[6] = (byte) 0x4E; 
-		tab[7] = (byte) 0x4E;  
-		tab[8] = (byte) 0x4E; 
-		tab[9] = (byte) 0x4E; 
+		tab[5] = (byte) 0x4E;
+		tab[6] = (byte) 0x4E;
+		tab[7] = (byte) 0x4E;
+		tab[8] = (byte) 0x4E;
+		tab[9] = (byte) 0x4E;
 		tab[10] = (byte) 0x4E;
 		tab[11] = (byte) 0x4E;
 		tab[12] = (byte) 0x4E;
@@ -406,7 +404,7 @@ public class PD69200 implements Runnable {
 
 		return tab;
 	}
-	
+
 	private byte[] pse_get_all_4_pair_port_power_5(byte echo) {
 
 		tab[0] = (byte) 0x02; // command
@@ -414,11 +412,11 @@ public class PD69200 implements Runnable {
 		tab[2] = (byte) 0x07; // global
 		tab[3] = (byte) 0xB4; // #5
 		tab[4] = (byte) 0x4E;
-		tab[5] = (byte) 0x4E; 
-		tab[6] = (byte) 0x4E; 
-		tab[7] = (byte) 0x4E;  
-		tab[8] = (byte) 0x4E; 
-		tab[9] = (byte) 0x4E; 
+		tab[5] = (byte) 0x4E;
+		tab[6] = (byte) 0x4E;
+		tab[7] = (byte) 0x4E;
+		tab[8] = (byte) 0x4E;
+		tab[9] = (byte) 0x4E;
 		tab[10] = (byte) 0x4E;
 		tab[11] = (byte) 0x4E;
 		tab[12] = (byte) 0x4E;
@@ -429,19 +427,19 @@ public class PD69200 implements Runnable {
 
 		return tab;
 	}
-	
+
 	private byte[] pse_get_4_pair_port_power(byte echo, byte port) {
 
 		tab[0] = (byte) 0x02; // command
 		tab[1] = echo;
-		tab[2] = (byte) 0x01; // 4 pairs 
-		tab[3] =  port;  
+		tab[2] = (byte) 0x01; // 4 pairs
+		tab[3] = port;
 		tab[4] = (byte) 0x4E;
-		tab[5] = (byte) 0x4E; 
-		tab[6] = (byte) 0x4E; 
-		tab[7] = (byte) 0x4E;  
-		tab[8] = (byte) 0x4E; 
-		tab[9] = (byte) 0x4E; 
+		tab[5] = (byte) 0x4E;
+		tab[6] = (byte) 0x4E;
+		tab[7] = (byte) 0x4E;
+		tab[8] = (byte) 0x4E;
+		tab[9] = (byte) 0x4E;
 		tab[10] = (byte) 0x4E;
 		tab[11] = (byte) 0x4E;
 		tab[12] = (byte) 0x4E;
@@ -453,7 +451,6 @@ public class PD69200 implements Runnable {
 		return tab;
 	}
 
-	
 	/**
 	 * This method does the checksum
 	 * 
@@ -475,16 +472,16 @@ public class PD69200 implements Runnable {
 
 		return tab;
 	} // end of checksum
-	
-	
+
 	/**
 	 * echo++
+	 * 
 	 * @return
 	 */
-	private byte get_echo(){
+	private byte get_echo() {
 		echo++;
-		if(echo>0xFE){
-			echo=0;
+		if (echo > 0xFE) {
+			echo = 0;
 		}
 		return echo;
 	}
@@ -493,13 +490,39 @@ public class PD69200 implements Runnable {
 	public void run() {
 		while (!Thread.interrupted()) {
 			try {
-				pse_get_total_power(get_echo());
+				buf = new byte[15];
+				tab = pse_get_total_power(get_echo());
+				device.write(tab);
+				int i = 1;
+				while (true) {
+					int res = device.read(buf, 0, 1);
+					if (buf[0] != 0) {
+						int pos = device.read(buf, 1, 14);
+						// System.out.println("go :" + i + " pos:" + pos);
+						break;
+					}
+				}
+				
+				printBuffer(buf);
 				Thread.sleep(SCAN_RATE);
 			} catch (InterruptedException e) {
 				// Nothing to do
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	} // end of thread
+
+	
+	private void printBuffer(byte[] buf2) {
+		System.out.println("**********************");
+		for (int j = 0; j < buf.length; j++) {
+			System.out.println("buf["+j+"]=" + (buf[j]));
+		}
+		System.out.println("**********************");
+		
+	} // end of printBuffer
 
 } // end of class
 
