@@ -73,8 +73,8 @@ public class PD69200 implements Runnable {
 		System.out.println("[WAIT] Initializing PSE...");
 
 		// enable channels
-		pse_enable_channels(get_echo());
-		Thread.sleep(100); // wait 100 ms
+		//pse_enable_channels(get_echo());
+		//Thread.sleep(100); // wait 100 ms
 		
 		// enable 4 pairs and PoH
 		//pse_set_4_pair_ports_parameters(get_echo());
