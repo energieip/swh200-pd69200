@@ -73,11 +73,11 @@ public class PD69200 implements Runnable {
 		System.out.println("[WAIT] Initializing PSE...");
 
 		// enable channels
-		//pse_enable_channels(get_echo());
+		pse_enable_channels(get_echo());
 		//Thread.sleep(100); // wait 100 ms
 		
 		// enable 4 pairs and PoH
-		//pse_set_4_pair_ports_parameters(get_echo());
+		pse_set_4_pair_ports_parameters(get_echo());
 		//Thread.sleep(100); // wait 100 ms
 
 		// set power limit to 62W (0XFF 0xFE)
@@ -237,8 +237,8 @@ public class PD69200 implements Runnable {
 		tab[3] = (byte) 0xAF; // PortFullInit4Pair
 		tab[4] = (byte) 0x80; // CH number or 0x80 for all
 		tab[5] = (byte) 0x4E; // default (2 nibbles)
-		tab[6] = (byte) 0xFF; // PPL4Pair
-		tab[7] = (byte) 0xFE; // PPL4Pair
+		tab[6] = (byte) 0xEA; // PPL4Pair
+		tab[7] = (byte) 0x60; // PPL4Pair
 		tab[8] = (byte) 0x4E; // Priority
 		tab[9] = (byte) 0x02; // PoH
 		tab[10] = (byte) 0x00; // Sum_as_TPPL, Energy management
