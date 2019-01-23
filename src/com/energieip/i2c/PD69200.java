@@ -460,12 +460,12 @@ public class PD69200 implements Runnable {
 	private byte[] checksum(byte[] tab) {
 		int checksum = 0;
 		for (int i = 0; i < tab.length - 2; i++) {
-			System.out.println("i=" + i + " checksum=" + checksum);
+			//System.out.println("i=" + i + " checksum=" + checksum);
 			checksum = checksum + tab[i];
 		}
 
 		short checksum_short = (short) checksum;
-		System.out.println("checksum short=" + checksum_short);
+		//System.out.println("checksum short=" + checksum_short);
 
 		tab[14] = (byte) (checksum_short & 0xff);
 		tab[13] = (byte) ((checksum_short >> 8) & 0xff);
@@ -490,6 +490,7 @@ public class PD69200 implements Runnable {
 	public void run() {
 		while (!Thread.interrupted()) {
 			try {
+				System.out.println("Requesting total power...");
 				buf = new byte[15];
 				tab = pse_get_total_power(get_echo());
 				device.write(tab);
