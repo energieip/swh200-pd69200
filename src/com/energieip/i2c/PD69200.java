@@ -211,9 +211,9 @@ public class PD69200 implements Runnable {
 		tab[2] = (byte) 0x05; // channel
 		tab[3] = (byte) 0x0B; // Supply
 		tab[4] = channel; // CH number or 0x80 for all
-		tab[5] = (byte) 0xFF; // 60W => EA 65W => FF 90W => NOT SUPPORTED (3
+		tab[5] = (byte) 0xEA; // 60W => EA 65W => FF 90W => NOT SUPPORTED (3
 								// bytes needed)
-		tab[6] = (byte) 0xFE; // 60W => 60 65W => FE 90W => NOT SUPPORTED (3
+		tab[6] = (byte) 0x60; // 60W => 60 65W => FE 90W => NOT SUPPORTED (3
 								// bytes needed)
 		tab[7] = (byte) 0x4E;
 		tab[8] = (byte) 0x4E;
@@ -259,8 +259,8 @@ public class PD69200 implements Runnable {
 		tab[2] = (byte) 0x05; // channel
 		tab[3] = (byte) 0xAD; // Supply4Pair
 		tab[4] = (byte) 0x80; // CH number or 0x80 for all
-		tab[5] = (byte) 0x75; // PPL4Pair
-		tab[6] = (byte) 0x30; // PPL4Pair
+		tab[5] = (byte) 0xEA; // PPL4Pair EA60=60W
+		tab[6] = (byte) 0x60; // PPL4Pair
 		tab[7] = (byte) 0x4E;
 		tab[8] = (byte) 0x4E;
 		tab[9] = (byte) 0x4E;
