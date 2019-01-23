@@ -41,17 +41,45 @@ public class PD69200 implements Runnable {
 	 * Default constructor
 	 */
 	public PD69200() {
-		init();		
-		readThread = new Thread(this);
-		readThread.start();
-	} // end of constructor
+		
+		try {
+			
+			initi2c();
+			initPSE();
 
+			readThread = new Thread(this);
+			readThread.start();
+
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	} // end of constructor
+	
+	
+	/**
+	 * initialize PSE
+	 * @throws InterruptedException 
+	 */
+	private void initPSE() throws InterruptedException {
+		System.out.println("Initializing PSE...");
+		
+		// enable 4 pairs and PoH
+		pse_set_4_pair_ports_parameters(echo);
+		Thread.sleep(100); // wait 100 ms
+		
+		// set power limit to 62W (0XFF 0xFE)
+		pse_set_4_pair_power_limit(get_echo());
+		Thread.sleep(100); // wait 100 ms
+	}
+	
 	/**
 	 * initialize I2C
 	 */
-	private void init() {
+	private void initi2c() {
 		int[] ids;
 		try {
+			System.out.println("Initializing I2C...");
 			ids = I2CFactory.getBusIds();
 			System.out.println("Found follow I2C busses: " + Arrays.toString(ids));
 			bus = I2CFactory.getInstance(I2CBus.BUS_1);
@@ -123,7 +151,7 @@ public class PD69200 implements Runnable {
 		return tab;
 	}
 
-	private byte[] pse_4_pair_ports_parameters(byte echo) {
+	private byte[] pse_set_4_pair_ports_parameters(byte echo) {
 
 		tab[0] = (byte) 0x00; // command
 		tab[1] = echo;
@@ -146,7 +174,7 @@ public class PD69200 implements Runnable {
 		return tab;
 	}
 
-	private byte[] pse_4_pair_power_limit(byte echo) {
+	private byte[] pse_set_4_pair_power_limit(byte echo) {
 
 		tab[0] = (byte) 0x00; // command
 		tab[1] = echo;
@@ -169,7 +197,7 @@ public class PD69200 implements Runnable {
 		return tab;
 	}
 	
-	private byte[] pse_4_pair_temporary_power_limit(byte echo) {
+	private byte[] pse_set_4_pair_temporary_power_limit(byte echo) {
 
 		tab[0] = (byte) 0x00; // command
 		tab[1] = echo;
@@ -241,7 +269,7 @@ public class PD69200 implements Runnable {
 		return tab;
 	}
 
-	private byte[] get_total_power(byte echo) {
+	private byte[] pse_get_total_power(byte echo) {
 
 		tab[0] = (byte) 0x02; // command
 		tab[1] = echo;
@@ -264,7 +292,7 @@ public class PD69200 implements Runnable {
 		return tab;
 	}
 
-	private byte[] get_power_supply_voltage(byte echo) {
+	private byte[] pse_get_power_supply_voltage(byte echo) {
 
 		tab[0] = (byte) 0x02; // command
 		tab[1] = echo;
@@ -287,7 +315,7 @@ public class PD69200 implements Runnable {
 		return tab;
 	}
 	
-	private byte[] get_all_4_pair_port_power_1(byte echo) {
+	private byte[] pse_get_all_4_pair_port_power_1(byte echo) {
 
 		tab[0] = (byte) 0x02; // command
 		tab[1] = echo;
@@ -310,7 +338,7 @@ public class PD69200 implements Runnable {
 		return tab;
 	}
 	
-	private byte[] get_all_4_pair_port_power_2(byte echo) {
+	private byte[] pse_get_all_4_pair_port_power_2(byte echo) {
 
 		tab[0] = (byte) 0x02; // command
 		tab[1] = echo;
@@ -333,7 +361,7 @@ public class PD69200 implements Runnable {
 		return tab;
 	}
 	
-	private byte[] get_all_4_pair_port_power_3(byte echo) {
+	private byte[] pse_get_all_4_pair_port_power_3(byte echo) {
 
 		tab[0] = (byte) 0x02; // command
 		tab[1] = echo;
@@ -356,7 +384,7 @@ public class PD69200 implements Runnable {
 		return tab;
 	}
 
-	private byte[] get_all_4_pair_port_power_4(byte echo) {
+	private byte[] pse_get_all_4_pair_port_power_4(byte echo) {
 
 		tab[0] = (byte) 0x02; // command
 		tab[1] = echo;
@@ -379,7 +407,7 @@ public class PD69200 implements Runnable {
 		return tab;
 	}
 	
-	private byte[] get_all_4_pair_port_power_5(byte echo) {
+	private byte[] pse_get_all_4_pair_port_power_5(byte echo) {
 
 		tab[0] = (byte) 0x02; // command
 		tab[1] = echo;
@@ -402,7 +430,7 @@ public class PD69200 implements Runnable {
 		return tab;
 	}
 	
-	private byte[] get_4_pair_port_power(byte echo, byte port) {
+	private byte[] pse_get_4_pair_port_power(byte echo, byte port) {
 
 		tab[0] = (byte) 0x02; // command
 		tab[1] = echo;
@@ -465,6 +493,7 @@ public class PD69200 implements Runnable {
 	public void run() {
 		while (!Thread.interrupted()) {
 			try {
+				pse_get_total_power(get_echo());
 				Thread.sleep(SCAN_RATE);
 			} catch (InterruptedException e) {
 				// Nothing to do
