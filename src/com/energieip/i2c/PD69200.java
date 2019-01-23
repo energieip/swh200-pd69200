@@ -81,6 +81,7 @@ public class PD69200 implements Runnable {
 		Thread.sleep(50); // wait 50 ms
 		int i = 1;
 		System.out.println("[WAIT] Waiting for system backup ACK...");
+		/*
 		while (true) {
 			int res = device.read(buf, 0, 1);
 			if (buf[0] != 0) {
@@ -89,8 +90,9 @@ public class PD69200 implements Runnable {
 				break;
 			}
 		}
+		*/
 		System.out.println("[OK] System backup complete");
-		
+		Thread.sleep(100); // wait 100 ms
 
 	}
 
