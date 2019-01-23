@@ -527,7 +527,7 @@ public class PD69200 implements Runnable {
 	 */
 	private byte get_echo() {
 		echo++;
-		if (echo > 0xFE) {
+		if (echo > 0x78) {
 			echo = 0;
 		}
 		return echo;
