@@ -83,6 +83,9 @@ public class PD69200 implements Runnable {
 		pse_set_4_pair_power_limit(get_echo());
 		Thread.sleep(100); // wait 100 ms
 		
+		pse_force_power(get_echo());
+		Thread.sleep(100); // wait 100 ms
+		
 		System.out.println("[OK] PSE initialized");
 		
 		pse_save_settings(get_echo());
