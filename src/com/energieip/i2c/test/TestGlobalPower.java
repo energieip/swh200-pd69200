@@ -14,22 +14,24 @@ public class TestGlobalPower {
 	public TestGlobalPower() {
 			
 				buf[0]=3;
-				buf[1]=37;
+				buf[1]=9;
 				buf[2]=0;
-				buf[3]=0;
+				buf[3]=2;
 				buf[4]=0;
-				buf[5]=0;
-				buf[6]=0;
-				buf[7]=0;
+				buf[5]=2;
+				buf[6]=6;
+				buf[7]=74;
 				buf[8]=6;
 				buf[9]=76;
-				buf[10]=0;
+				buf[10]=15;
 				buf[11]=78;
 				buf[12]=78;
 				buf[13]=1;
-				buf[14]=22;
+				buf[14]=93;
+
+				int power = ((buf[2] & 0xff) << 8) | (buf[3] & 0xff);
 				
-				
+				System.out.println(power);
 				
 		
 	}

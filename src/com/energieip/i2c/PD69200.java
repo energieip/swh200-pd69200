@@ -518,7 +518,8 @@ public class PD69200 implements Runnable {
 	
 	private void extractData(byte[] buffer) {
 		if(buffer[0]==0x03){ // Telemetry
-						
+			int power = ((buffer[2] & 0xff) << 8) | (buffer[3] & 0xff);	
+			System.out.println("power (W)=" + power);
 		}
 		
 		
