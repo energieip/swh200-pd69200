@@ -52,6 +52,9 @@ public class PD69200 implements Runnable {
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	} // end of constructor
 
@@ -59,9 +62,10 @@ public class PD69200 implements Runnable {
 	 * initialize PSE
 	 * 
 	 * @throws InterruptedException
+	 * @throws IOException 
 	 */
-	private void initPSE() throws InterruptedException {
-		System.out.println("Initializing PSE...");
+	private void initPSE() throws InterruptedException, IOException {
+		System.out.println("[WAIT] Initializing PSE...");
 
 		// enable 4 pairs and PoH
 		pse_set_4_pair_ports_parameters(echo);
@@ -70,6 +74,24 @@ public class PD69200 implements Runnable {
 		// set power limit to 62W (0XFF 0xFE)
 		pse_set_4_pair_power_limit(get_echo());
 		Thread.sleep(100); // wait 100 ms
+		
+		System.out.println("[OK] PSE initialized");
+		
+		pse_save_settings(get_echo());
+		Thread.sleep(50); // wait 50 ms
+		int i = 1;
+		System.out.println("[WAIT] Waiting for system backup ACK...");
+		while (true) {
+			int res = device.read(buf, 0, 1);
+			if (buf[0] != 0) {
+				int pos = device.read(buf, 1, 14);
+				// System.out.println("go :" + i + " pos:" + pos);
+				break;
+			}
+		}
+		System.out.println("[OK] System backup complete");
+		
+
 	}
 
 	/**
@@ -434,6 +456,29 @@ public class PD69200 implements Runnable {
 		tab[1] = echo;
 		tab[2] = (byte) 0x01; // 4 pairs
 		tab[3] = port;
+		tab[4] = (byte) 0x4E;
+		tab[5] = (byte) 0x4E;
+		tab[6] = (byte) 0x4E;
+		tab[7] = (byte) 0x4E;
+		tab[8] = (byte) 0x4E;
+		tab[9] = (byte) 0x4E;
+		tab[10] = (byte) 0x4E;
+		tab[11] = (byte) 0x4E;
+		tab[12] = (byte) 0x4E;
+		tab[13] = (byte) 0x00;
+		tab[14] = (byte) 0x00;
+
+		tab = checksum(tab);
+
+		return tab;
+	}
+	
+	private byte[] pse_save_settings(byte echo) {
+
+		tab[0] = (byte) 0x01; // command
+		tab[1] = echo;
+		tab[2] = (byte) 0x06;
+		tab[3] = (byte) 0x0F;
 		tab[4] = (byte) 0x4E;
 		tab[5] = (byte) 0x4E;
 		tab[6] = (byte) 0x4E;
