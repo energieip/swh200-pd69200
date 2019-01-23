@@ -259,8 +259,8 @@ public class PD69200 implements Runnable {
 		tab[2] = (byte) 0x05; // channel
 		tab[3] = (byte) 0xAD; // Supply4Pair
 		tab[4] = (byte) 0x80; // CH number or 0x80 for all
-		tab[5] = (byte) 0xEA; // PPL4Pair
-		tab[6] = (byte) 0x60; // PPL4Pair
+		tab[5] = (byte) 0x75; // PPL4Pair
+		tab[6] = (byte) 0x30; // PPL4Pair
 		tab[7] = (byte) 0x4E;
 		tab[8] = (byte) 0x4E;
 		tab[9] = (byte) 0x4E;
