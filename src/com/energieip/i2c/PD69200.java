@@ -573,7 +573,7 @@ public class PD69200 implements Runnable {
 			if(power>POWER_MAX || power <POWER_MIN){
 				// do nothing
 			}else{
-				System.out.println("power (W)=" + power);
+				System.out.println("power= " + power + " W");
 			}
 			
 		}
