@@ -86,6 +86,18 @@ public class PD69200 implements Runnable {
 		pse_force_power(get_echo());
 		Thread.sleep(100); // wait 100 ms
 		
+		pse_get_power_limit(get_echo());
+		while (true) {
+			int res = device.read(buf, 0, 1);
+			if (buf[0] != 0) {
+				int pos = device.read(buf, 1, 14);
+				// System.out.println("go :" + i + " pos:" + pos);
+				break;
+			}
+		}
+		System.out.println("[ACK] get power limit ");
+		printBuffer(buf);
+		
 		System.out.println("[OK] PSE initialized");
 		
 		pse_save_settings(get_echo());
@@ -531,6 +543,30 @@ public class PD69200 implements Runnable {
 
 		return tab;
 	}
+	
+	private byte[] pse_get_power_limit(byte echo) {
+
+		tab[0] = (byte) 0x02; // request
+		tab[1] = echo;
+		tab[2] = (byte) 0x05; 
+		tab[3] = (byte) 0x0B;
+		tab[4] = (byte) 0x01; // first channel 
+		tab[5] = (byte) 0x4E; 
+		tab[6] = (byte) 0x4E;
+		tab[7] = (byte) 0x4E;
+		tab[8] = (byte) 0x4E;
+		tab[9] = (byte) 0x4E;
+		tab[10] = (byte) 0x4E;
+		tab[11] = (byte) 0x4E;
+		tab[12] = (byte) 0x4E;
+		tab[13] = (byte) 0x00;
+		tab[14] = (byte) 0x00;
+
+		tab = checksum(tab);
+
+		return tab;
+	}
+
 
 	/**
 	 * This method does the checksum
