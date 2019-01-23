@@ -73,19 +73,19 @@ public class PD69200 implements Runnable {
 		System.out.println("[WAIT] Initializing PSE...");
 
 		// enable channels
-		//pse_enable_channels(get_echo());
-		//Thread.sleep(100); // wait 100 ms
+		pse_enable_channels(get_echo());
+		Thread.sleep(100); // wait 100 ms
 		
 		// enable 4 pairs and PoH
 		//pse_set_4_pair_ports_parameters(get_echo());
 		//Thread.sleep(100); // wait 100 ms
 
 		// set power limit to 62W (0XFF 0xFE)
-		//pse_set_4_pair_power_limit(get_echo());
-		//Thread.sleep(100); // wait 100 ms
-		
-		pse_force_power(get_echo());
+		pse_set_4_pair_power_limit(get_echo());
 		Thread.sleep(100); // wait 100 ms
+		
+		//pse_force_power(get_echo());
+		//Thread.sleep(100); // wait 100 ms
 		
 		/*
 		pse_get_power_limit(get_echo());
@@ -259,8 +259,8 @@ public class PD69200 implements Runnable {
 		tab[2] = (byte) 0x05; // channel
 		tab[3] = (byte) 0xAD; // Supply4Pair
 		tab[4] = (byte) 0x80; // CH number or 0x80 for all
-		tab[5] = (byte) 0xFF; // PPL4Pair
-		tab[6] = (byte) 0xFE; // PPL4Pair
+		tab[5] = (byte) 0xEA; // PPL4Pair
+		tab[6] = (byte) 0x60; // PPL4Pair
 		tab[7] = (byte) 0x4E;
 		tab[8] = (byte) 0x4E;
 		tab[9] = (byte) 0x4E;
@@ -561,8 +561,8 @@ public class PD69200 implements Runnable {
 		tab[2] = (byte) 0x05; //channel
 		tab[3] = (byte) 0x0C;
 		tab[4] = (byte) 0x80;
-		tab[5] = (byte) 0x24; // nibble 1 & 2
-		tab[6] = (byte) 0x02; //  port type
+		tab[5] = (byte) 0x4E; 
+		tab[6] = (byte) 0xFF; 
 		tab[7] = (byte) 0x4E;
 		tab[8] = (byte) 0x4E;
 		tab[9] = (byte) 0x4E;
