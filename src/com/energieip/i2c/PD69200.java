@@ -86,6 +86,7 @@ public class PD69200 implements Runnable {
 		pse_force_power(get_echo());
 		Thread.sleep(100); // wait 100 ms
 		
+		/*
 		pse_get_power_limit(get_echo());
 		while (true) {
 			int res = device.read(buf, 0, 1);
@@ -97,6 +98,7 @@ public class PD69200 implements Runnable {
 		}
 		System.out.println("[ACK] get power limit ");
 		printBuffer(buf);
+		*/
 		
 		System.out.println("[OK] PSE initialized");
 		
