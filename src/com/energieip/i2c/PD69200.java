@@ -71,8 +71,12 @@ public class PD69200 implements Runnable {
 	private void initPSE() throws InterruptedException, IOException {
 		System.out.println("[WAIT] Initializing PSE...");
 
+		// enable channels
+		pse_enable_channels(get_echo());
+		Thread.sleep(100); // wait 100 ms
+		
 		// enable 4 pairs and PoH
-		pse_set_4_pair_ports_parameters(echo);
+		pse_set_4_pair_ports_parameters(get_echo());
 		Thread.sleep(100); // wait 100 ms
 
 		// set power limit to 62W (0XFF 0xFE)
@@ -488,6 +492,29 @@ public class PD69200 implements Runnable {
 		tab[4] = (byte) 0x4E;
 		tab[5] = (byte) 0x4E;
 		tab[6] = (byte) 0x4E;
+		tab[7] = (byte) 0x4E;
+		tab[8] = (byte) 0x4E;
+		tab[9] = (byte) 0x4E;
+		tab[10] = (byte) 0x4E;
+		tab[11] = (byte) 0x4E;
+		tab[12] = (byte) 0x4E;
+		tab[13] = (byte) 0x00;
+		tab[14] = (byte) 0x00;
+
+		tab = checksum(tab);
+
+		return tab;
+	}
+	
+	private byte[] pse_enable_channels(byte echo) {
+
+		tab[0] = (byte) 0x00; // command
+		tab[1] = echo;
+		tab[2] = (byte) 0x05; //channel
+		tab[3] = (byte) 0x0C;
+		tab[4] = (byte) 0x80;
+		tab[5] = (byte) 0x24; // nibble 1 & 2
+		tab[6] = (byte) 0x02; //  port type
 		tab[7] = (byte) 0x4E;
 		tab[8] = (byte) 0x4E;
 		tab[9] = (byte) 0x4E;
