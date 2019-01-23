@@ -1,4 +1,4 @@
-package com.energieip.i2c;
+package com.energieip.i2c.test;
 
 import java.util.function.ToDoubleBiFunction;
 

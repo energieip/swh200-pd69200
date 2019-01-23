@@ -502,9 +502,9 @@ public class PD69200 implements Runnable {
 						// System.out.println("go :" + i + " pos:" + pos);
 						break;
 					}
-				}
-				
+				}			
 				printBuffer(buf);
+				extractData(buf);
 				Thread.sleep(SCAN_RATE);
 			} catch (InterruptedException e) {
 				// Nothing to do
@@ -516,6 +516,14 @@ public class PD69200 implements Runnable {
 	} // end of thread
 
 	
+	private void extractData(byte[] buffer) {
+		if(buffer[0]==0x03){ // Telemetry
+						
+		}
+		
+		
+	}
+
 	private void printBuffer(byte[] buf2) {
 		System.out.println("**********************");
 		for (int j = 0; j < buf.length; j++) {
