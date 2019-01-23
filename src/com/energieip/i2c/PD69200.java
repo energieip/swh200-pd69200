@@ -26,7 +26,11 @@ public class PD69200 implements Runnable {
 	// thread
 	Thread readThread;
 	private int SCAN_RATE = 1000; // in milliseconds
-
+	
+	// const
+	final int POWER_MAX = 6000;
+	final int POWER_MIN = 0;
+	
 	/**
 	 * Main entry Point
 	 * 
@@ -566,7 +570,12 @@ public class PD69200 implements Runnable {
 	private void extractData(byte[] buffer) {
 		if(buffer[0]==0x03){ // Telemetry
 			int power = ((buffer[2] & 0xff) << 8) | (buffer[3] & 0xff);	
-			System.out.println("power (W)=" + power);
+			if(power>POWER_MAX || power <POWER_MIN){
+				// do nothing
+			}else{
+				System.out.println("power (W)=" + power);
+			}
+			
 		}
 		
 		
