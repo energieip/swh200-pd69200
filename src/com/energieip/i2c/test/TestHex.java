@@ -6,6 +6,7 @@ public class TestHex {
 
 	public static void main(String[] args) {
 		
+		/*
 		int a=82;
 		int b=0;
 		int c=-1;
@@ -34,7 +35,12 @@ public class TestHex {
 	System.out.println(toByte(d));
 	System.out.println(toByte(e));
 	System.out.println(toByte(f));
-	
+	*/
+		
+		byte i = 0x02;
+		
+		System.out.println(i*(byte)2+(byte)1);
+		
 	}
 	
 	public static int toByte(int number) {
