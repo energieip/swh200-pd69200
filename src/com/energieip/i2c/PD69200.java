@@ -82,6 +82,18 @@ public class PD69200 implements Runnable {
 		// enable 4 pairs and PoH
 		pse_set_4_pair_ports_parameters(get_echo());
 		Thread.sleep(50); // wait 50 ms
+		
+		pse_get_4_pair_ports_parameters(get_echo());
+		Thread.sleep(50); // wait 50 ms
+		while (true) {
+			int res = device.read(buf, 0, 1);
+			if (buf[0] != 0) {
+				int pos = device.read(buf, 1, 14);
+				// System.out.println("go :" + i + " pos:" + pos);
+				break;
+			}
+		}
+
 
 		// enable new matrix (4 pairs)
 		pse_set_individual_mask(get_echo());
@@ -367,6 +379,30 @@ public class PD69200 implements Runnable {
 
 		return tab;
 	}
+	
+	private byte[] pse_get_4_pair_ports_parameters(byte echo) {
+
+		tab[0] = (byte) 0x02; // command
+		tab[1] = echo;
+		tab[2] = (byte) 0x05; // channel
+		tab[3] = (byte) 0xAF; // PortFullInit4Pair
+		tab[4] = (byte) 0x80; // CH number or 0x80 for all
+		tab[5] = (byte) 0x4E; // default (2 nibbles)
+		tab[6] = (byte) 0x4E; // PPL4Pair
+		tab[7] = (byte) 0x4E; // PPL4Pair
+		tab[8] = (byte) 0x4E; // Priority
+		tab[9] = (byte) 0x4E; // PoH
+		tab[10] = (byte) 0x4E; // Sum_as_TPPL, Energy management
+		tab[11] = (byte) 0x4E; // PortPM2
+		tab[12] = (byte) 0x4E;
+		tab[13] = (byte) 0x00;
+		tab[14] = (byte) 0x00;
+
+		tab = checksum(tab);
+
+		return tab;
+	}
+
 
 	private byte[] pse_set_4_pair_power_limit(byte echo) {
 
