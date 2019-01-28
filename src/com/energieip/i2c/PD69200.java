@@ -77,10 +77,24 @@ public class PD69200 implements Runnable {
 		//pse_enable_channels(get_echo());
 		//Thread.sleep(50); // wait 50 ms
 		
-		
+		byte[] tab = new byte[15]; // output buffer tab
+		tab = pse_get_software_version(get_echo());
+		System.out.println("\npse_get_sofware_version");
+		buf = new byte[15];
+		while (true) {
+			int res = device.read(buf, 0, 1);
+			if (buf[0] != 0) {
+				int pos = device.read(buf, 1, 14);
+				System.out.println("POS="+ pos);
+				break;
+			}
+		}
+		System.out.println("\npse_get_sofware_version");
+		printBuffer(buf);
+
 		
 		// enable 4 pairs and PoH
-		byte[] tab = new byte[15]; // output buffer tab
+		tab = new byte[15]; // output buffer tab
 		tab = pse_set_4_pair_ports_parameters(get_echo());
 		System.out.println("\npse_set_4_pair_ports_parameters");
 		printBuffer(tab);
@@ -535,6 +549,29 @@ public class PD69200 implements Runnable {
 		tab[2] = (byte) 0x07; // global
 		tab[3] = (byte) 0x0B; // Supply
 		tab[4] = (byte) 0x60; // Total Power
+		tab[5] = (byte) 0x4E;
+		tab[6] = (byte) 0x4E;
+		tab[7] = (byte) 0x4E;
+		tab[8] = (byte) 0x4E;
+		tab[9] = (byte) 0x4E;
+		tab[10] = (byte) 0x4E;
+		tab[11] = (byte) 0x4E;
+		tab[12] = (byte) 0x4E;
+		tab[13] = (byte) 0x00;
+		tab[14] = (byte) 0x00;
+
+		tab = checksum(tab);
+
+		return tab;
+	}
+	
+	private byte[] pse_get_software_version(byte echo) {
+
+		tab[0] = (byte) 0x02; // command
+		tab[1] = echo;
+		tab[2] = (byte) 0x07; // global
+		tab[3] = (byte) 0x1E; // VersionZ
+		tab[4] = (byte) 0x21; // SW Version 
 		tab[5] = (byte) 0x4E;
 		tab[6] = (byte) 0x4E;
 		tab[7] = (byte) 0x4E;

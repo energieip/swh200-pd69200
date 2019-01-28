@@ -97,7 +97,7 @@ public class I2CRead {
         } // while
         
         for (int j = 0; j < buf.length; j++) {
-			System.out.println("buf["+j+"]=" + (buf[j]));
+			System.out.println("buf["+j+"]=" + (buf[j]&0xFF));
 		}
         
         
