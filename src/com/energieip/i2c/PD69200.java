@@ -84,9 +84,9 @@ public class PD69200 implements Runnable {
 		device.write(tab);
 		Thread.sleep(50); // wait 50 ms
 		
-		pse_get_4_pair_ports_parameters(get_echo());
+		tab = pse_get_4_pair_ports_parameters(get_echo());
 		device.write(tab);
-		//Thread.sleep(50); // wait 50 ms
+		Thread.sleep(50); // wait 50 ms
 		while (true) {
 			int res = device.read(buf, 0, 1);
 			if (buf[0] != 0) {
@@ -102,7 +102,8 @@ public class PD69200 implements Runnable {
 
 
 		// enable new matrix (4 pairs)
-		pse_set_individual_mask(get_echo());
+		tab = pse_set_individual_mask(get_echo());
+		device.write(tab);
 		Thread.sleep(50); // wait 50 ms
 		
 		// set power limit to 62W (0XFF 0xFE)
@@ -111,15 +112,18 @@ public class PD69200 implements Runnable {
 		
 		byte ll = 0x00;
 		for (int l = 0; l < NUMBER_OF_LOGICAL_PORTS; l++) {
-			pse_set_temporary_matrix(get_echo(),ll);
+			tab = pse_set_temporary_matrix(get_echo(),ll);
+			device.write(tab);
 			ll++;
 			Thread.sleep(50); // wait 50 ms
 		}
 		
-		pse_program_global_matrix(get_echo());
+		tab = pse_program_global_matrix(get_echo());
+		device.write(tab);
 		Thread.sleep(50); // wait 50 ms	
 		
-		pse_enable_4_pair_for_channels(get_echo());
+		tab = pse_enable_4_pair_for_channels(get_echo());
+		device.write(tab);
 		Thread.sleep(50); // wait 50 ms
 		
 		
