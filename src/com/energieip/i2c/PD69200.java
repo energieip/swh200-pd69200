@@ -375,6 +375,10 @@ public class PD69200 implements Runnable {
 
 	private byte[] pse_set_4_pair_ports_parameters(byte echo) {
 
+		System.out.println("DEBUG0");
+		printBuffer(tab);
+
+		
 		tab[0] = (byte) 0x00; // command
 		tab[1] = echo;
 		tab[2] = (byte) 0x05; // channel
@@ -391,7 +395,13 @@ public class PD69200 implements Runnable {
 		tab[13] = (byte) 0x00;
 		tab[14] = (byte) 0x00;
 
+		System.out.println("DEBUG1");
+		printBuffer(tab);
+		
 		tab = checksum(tab);
+		
+		System.out.println("DEBUG2");
+		printBuffer(tab);
 
 		return tab;
 	}
