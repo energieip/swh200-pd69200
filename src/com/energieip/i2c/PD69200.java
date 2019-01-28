@@ -122,9 +122,9 @@ public class PD69200 implements Runnable {
 		printBuffer(buf);
 		*/
 		
-		pse_save_settings(get_echo());
-		System.out.println("[WAIT] Waiting for system backup ACK...");
-		Thread.sleep(50); // wait 50 ms
+		//pse_save_settings(get_echo());
+		//System.out.println("[WAIT] Waiting for system backup ACK...");
+		//Thread.sleep(50); // wait 50 ms
 		//int i = 1;
 		/*
 		while (true) {
