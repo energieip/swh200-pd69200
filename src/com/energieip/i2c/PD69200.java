@@ -77,9 +77,12 @@ public class PD69200 implements Runnable {
 		//pse_enable_channels(get_echo());
 		//Thread.sleep(50); // wait 50 ms
 		
+		pse_enable_4_pair_for_channels(get_echo());
+		Thread.sleep(50); // wait 50 ms
+		
 		// enable 4 pairs and PoH
 		pse_set_4_pair_ports_parameters(get_echo());
-		Thread.sleep(50); // wait 100 ms
+		Thread.sleep(50); // wait 50 ms
 
 		// enable new matrix (4 pairs)
 		pse_set_individual_mask(get_echo());
@@ -308,6 +311,29 @@ public class PD69200 implements Runnable {
 		tab[9] = (byte) 0x4E;
 		tab[10] = (byte) 0x4E;
 		tab[11] = (byte) 0x4E;
+		tab[12] = (byte) 0x4E;
+		tab[13] = (byte) 0x00;
+		tab[14] = (byte) 0x00;
+
+		tab = checksum(tab);
+
+		return tab;
+	}
+	
+	private byte[] pse_enable_4_pair_for_channels(byte echo) {
+
+		tab[0] = (byte) 0x00; // command
+		tab[1] = echo;
+		tab[2] = (byte) 0x05; // channel
+		tab[3] = (byte) 0x02; // enable/disable 4 Pair
+		tab[4] = (byte) 0x80; // CH number or 0x80 for all
+		tab[5] = (byte) 0x01; // enable 4 pair (0x00 for disable)
+		tab[6] = (byte) 0x4E; 
+		tab[7] = (byte) 0x4E; 
+		tab[8] = (byte) 0x4E; 
+		tab[9] = (byte) 0x4E; 
+		tab[10] = (byte) 0x4E; 
+		tab[11] = (byte) 0x4E; 
 		tab[12] = (byte) 0x4E;
 		tab[13] = (byte) 0x00;
 		tab[14] = (byte) 0x00;
