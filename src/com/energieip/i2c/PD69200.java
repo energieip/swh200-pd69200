@@ -80,10 +80,12 @@ public class PD69200 implements Runnable {
 		
 		
 		// enable 4 pairs and PoH
-		pse_set_4_pair_ports_parameters(get_echo());
+		tab = pse_set_4_pair_ports_parameters(get_echo());
+		device.write(tab);
 		Thread.sleep(50); // wait 50 ms
 		
 		pse_get_4_pair_ports_parameters(get_echo());
+		device.write(tab);
 		//Thread.sleep(50); // wait 50 ms
 		while (true) {
 			int res = device.read(buf, 0, 1);
