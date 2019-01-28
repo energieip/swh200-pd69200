@@ -90,12 +90,12 @@ public class PD69200 implements Runnable {
 		tab = new byte[15]; // output buffer tab
 		tab = pse_get_4_pair_ports_parameters(get_echo());
 		device.write(tab);
-		Thread.sleep(50); // wait 50 ms
+		//Thread.sleep(50); // wait 50 ms
 		
 		buf = new byte[15];
 		while (true) {
 			int res = device.read(buf, 0, 1);
-			if (buf[0] != 0) {
+			if (buf[0] == 0x03) {
 				int pos = device.read(buf, 1, 14);
 				System.out.println("POS="+ pos);
 				break;
