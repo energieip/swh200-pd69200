@@ -49,8 +49,8 @@ public class PD69200 implements Runnable {
 		try {
 
 			initi2c();
-			//resetPSE();
-			initPSE();
+			resetPSE();
+			//initPSE();
 
 			//readThread = new Thread(this);
 			//readThread.start();
@@ -211,7 +211,10 @@ public class PD69200 implements Runnable {
 	
 	private void resetPSE() throws InterruptedException, IOException {
 		System.out.println("[WAIT] resetting PSE...");
-		pse_reset_to_factory_default(get_echo());
+		tab = new byte[15]; // output buffer tab
+		tab = pse_reset_to_factory_default(get_echo());
+		device.write(tab);
+		
 		Thread.sleep(100); // wait 100 ms
 	}
 	
