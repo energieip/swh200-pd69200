@@ -119,6 +119,9 @@ public class I2CRead {
 			System.out.println("buf["+j+"]=" + (buf[j]&0xFF));
 		}
         
+        int version = ((buf[5] & 0xff) << 8) | (buf[6] & 0xff);
+        System.out.println("Version=" + version);
+        
         
         //System.out.println("buf=" + buf + " res=" + res);
         
