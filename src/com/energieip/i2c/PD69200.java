@@ -52,8 +52,8 @@ public class PD69200 implements Runnable {
 			//resetPSE();
 			initPSE();
 
-			readThread = new Thread(this);
-			readThread.start();
+			//readThread = new Thread(this);
+			//readThread.start();
 
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
@@ -282,7 +282,7 @@ public class PD69200 implements Runnable {
 	private byte[] pse_set_individual_mask(byte echo) {
 
 		tab[0] = (byte) 0x00; // command
-		tab[1] = echo;
+		tab[1] = 0x02;
 		tab[2] = (byte) 0x07; 
 		tab[3] = (byte) 0x56; 
 		tab[4] = (byte) 0x34; // 0x34: New matrix (4 pairs) 
@@ -382,7 +382,7 @@ public class PD69200 implements Runnable {
 
 		
 		tab_new[0] = (byte) 0x00; // command
-		tab_new[1] = echo;
+		tab_new[1] = 0x01;
 		tab_new[2] = (byte) 0x05; // channel
 		tab_new[3] = (byte) 0xAF; // PortFullInit4Pair
 		tab_new[4] = (byte) 0x80; // CH number or 0x80 for all

@@ -16,7 +16,7 @@ public class TestGlobalPower {
 				buf[0]=3;
 				buf[1]=9;
 				buf[2]=0;
-				buf[3]=2;
+				buf[3]=(byte)0x02;
 				buf[4]=0;
 				buf[5]=2;
 				buf[6]=6;
