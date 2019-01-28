@@ -80,6 +80,7 @@ public class PD69200 implements Runnable {
 		
 		
 		// enable 4 pairs and PoH
+		byte[] tab = new byte[15]; // output buffer tab
 		tab = pse_set_4_pair_ports_parameters(get_echo());
 		System.out.println("\npse_set_4_pair_ports_parameters");
 		printBuffer(tab);
@@ -374,36 +375,37 @@ public class PD69200 implements Runnable {
 	}
 
 	private byte[] pse_set_4_pair_ports_parameters(byte echo) {
-
+		
+		byte[] tab_new = new byte[15]; // output buffer tab
 		System.out.println("DEBUG0");
-		printBuffer(tab);
+		printBuffer(tab_new);
 
 		
-		tab[0] = (byte) 0x00; // command
-		tab[1] = echo;
-		tab[2] = (byte) 0x05; // channel
-		tab[3] = (byte) 0xAF; // PortFullInit4Pair
-		tab[4] = (byte) 0x80; // CH number or 0x80 for all
-		tab[5] = (byte) 0x4E; // default (2 nibbles)
-		tab[6] = (byte) 0xFF; // PPL4Pair
-		tab[7] = (byte) 0xFF; // PPL4Pair
-		tab[8] = (byte) 0x4E; // Priority
-		tab[9] = (byte) 0x02; // PoH
-		tab[10] = (byte) 0x00; // Sum_as_TPPL, Energy management
-		tab[11] = (byte) 0x4E; // PortPM2
-		tab[12] = (byte) 0x4E;
-		tab[13] = (byte) 0x00;
-		tab[14] = (byte) 0x00;
+		tab_new[0] = (byte) 0x00; // command
+		tab_new[1] = echo;
+		tab_new[2] = (byte) 0x05; // channel
+		tab_new[3] = (byte) 0xAF; // PortFullInit4Pair
+		tab_new[4] = (byte) 0x80; // CH number or 0x80 for all
+		tab_new[5] = (byte) 0x4E; // default (2 nibbles)
+		tab_new[6] = (byte) 0xFF; // PPL4Pair
+		tab_new[7] = (byte) 0xFF; // PPL4Pair
+		tab_new[8] = (byte) 0x4E; // Priority
+		tab_new[9] = (byte) 0x02; // PoH
+		tab_new[10] = (byte) 0x00; // Sum_as_TPPL, Energy management
+		tab_new[11] = (byte) 0x4E; // PortPM2
+		tab_new[12] = (byte) 0x4E;
+		tab_new[13] = (byte) 0x00;
+		tab_new[14] = (byte) 0x00;
 
 		System.out.println("DEBUG1");
-		printBuffer(tab);
+		printBuffer(tab_new);
 		
-		tab = checksum(tab);
+		tab_new = checksum(tab_new);
 		
 		System.out.println("DEBUG2");
-		printBuffer(tab);
+		printBuffer(tab_new);
 
-		return tab;
+		return tab_new;
 	}
 	
 	private byte[] pse_get_4_pair_ports_parameters(byte echo) {
