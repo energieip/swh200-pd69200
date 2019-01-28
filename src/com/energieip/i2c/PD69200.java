@@ -77,8 +77,7 @@ public class PD69200 implements Runnable {
 		//pse_enable_channels(get_echo());
 		//Thread.sleep(50); // wait 50 ms
 		
-		pse_enable_4_pair_for_channels(get_echo());
-		Thread.sleep(50); // wait 50 ms
+		
 		
 		// enable 4 pairs and PoH
 		pse_set_4_pair_ports_parameters(get_echo());
@@ -101,6 +100,9 @@ public class PD69200 implements Runnable {
 		
 		pse_program_global_matrix(get_echo());
 		Thread.sleep(50); // wait 50 ms	
+		
+		pse_enable_4_pair_for_channels(get_echo());
+		Thread.sleep(50); // wait 50 ms
 		
 		
 		//pse_force_power(get_echo());
