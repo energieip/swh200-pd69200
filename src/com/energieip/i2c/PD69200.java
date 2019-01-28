@@ -81,12 +81,16 @@ public class PD69200 implements Runnable {
 		
 		// enable 4 pairs and PoH
 		tab = pse_set_4_pair_ports_parameters(get_echo());
+		System.out.println("\npse_set_4_pair_ports_parameters");
+		printBuffer(tab);
 		device.write(tab);
 		Thread.sleep(50); // wait 50 ms
 		
+		/*
 		tab = pse_get_4_pair_ports_parameters(get_echo());
 		device.write(tab);
 		Thread.sleep(50); // wait 50 ms
+		
 		while (true) {
 			int res = device.read(buf, 0, 1);
 			if (buf[0] != 0) {
@@ -99,10 +103,12 @@ public class PD69200 implements Runnable {
 		for (int i = 0; i < buf.length; i++) {
 			System.out.println(buf[i]);
 		}
-
+		 */
 
 		// enable new matrix (4 pairs)
 		tab = pse_set_individual_mask(get_echo());
+		System.out.println("\npse_set_individual_mask");
+		printBuffer(tab);
 		device.write(tab);
 		Thread.sleep(50); // wait 50 ms
 		
