@@ -84,14 +84,18 @@ public class PD69200 implements Runnable {
 		Thread.sleep(50); // wait 50 ms
 		
 		pse_get_4_pair_ports_parameters(get_echo());
-		Thread.sleep(50); // wait 50 ms
+		//Thread.sleep(50); // wait 50 ms
 		while (true) {
 			int res = device.read(buf, 0, 1);
 			if (buf[0] != 0) {
 				int pos = device.read(buf, 1, 14);
-				// System.out.println("go :" + i + " pos:" + pos);
+				System.out.println("POS="+ pos);
 				break;
 			}
+		}
+		
+		for (int i = 0; i < buf.length; i++) {
+			System.out.println(buf[i]);
 		}
 
 
