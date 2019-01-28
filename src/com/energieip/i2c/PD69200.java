@@ -87,11 +87,12 @@ public class PD69200 implements Runnable {
 		device.write(tab);
 		Thread.sleep(50); // wait 50 ms
 		
-		/*
+		tab = new byte[15]; // output buffer tab
 		tab = pse_get_4_pair_ports_parameters(get_echo());
 		device.write(tab);
 		Thread.sleep(50); // wait 50 ms
 		
+		buf = new byte[15];
 		while (true) {
 			int res = device.read(buf, 0, 1);
 			if (buf[0] != 0) {
@@ -100,11 +101,10 @@ public class PD69200 implements Runnable {
 				break;
 			}
 		}
-		
-		for (int i = 0; i < buf.length; i++) {
-			System.out.println(buf[i]);
-		}
-		 */
+		System.out.println("\npse_get_4_pair_ports_parameters");
+		printBuffer(buf);
+
+		 
 
 		// enable new matrix (4 pairs)
 		tab = pse_set_individual_mask(get_echo());
@@ -377,9 +377,10 @@ public class PD69200 implements Runnable {
 	private byte[] pse_set_4_pair_ports_parameters(byte echo) {
 		
 		byte[] tab_new = new byte[15]; // output buffer tab
+		/*
 		System.out.println("DEBUG0");
 		printBuffer(tab_new);
-
+		*/
 		
 		tab_new[0] = (byte) 0x00; // command
 		tab_new[1] = echo;
@@ -397,13 +398,13 @@ public class PD69200 implements Runnable {
 		tab_new[13] = (byte) 0x00;
 		tab_new[14] = (byte) 0x00;
 
-		System.out.println("DEBUG1");
-		printBuffer(tab_new);
+		//System.out.println("DEBUG1");
+		//printBuffer(tab_new);
 		
 		tab_new = checksum(tab_new);
 		
-		System.out.println("DEBUG2");
-		printBuffer(tab_new);
+		//System.out.println("DEBUG2");
+		//printBuffer(tab_new);
 
 		return tab_new;
 	}
