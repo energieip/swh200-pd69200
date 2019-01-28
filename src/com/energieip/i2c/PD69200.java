@@ -862,8 +862,8 @@ public class PD69200 implements Runnable {
 
 	private void printBuffer(byte[] buf2) {
 		System.out.println("**********************");
-		for (int j = 0; j < buf.length; j++) {
-			System.out.println("buf["+j+"]=" + (buf[j]));
+		for (int j = 0; j < buf2.length; j++) {
+			System.out.println("buf["+j+"]=" + (buf2[j]));
 		}
 		System.out.println("**********************");
 		
