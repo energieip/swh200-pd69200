@@ -62,12 +62,31 @@ public class I2CRead {
         
         byte[] tab = new byte[15];
         
-        // get systel status
+        /*
+        // get system status
         tab[0] = 0x02; // request
         tab[1] = 0x00; // echo
         tab[2] = 0x07;
         tab[3] = 0x3D;
         tab[4] = 0x4E;
+        tab[5] = 0x4E;
+        tab[6] = 0x4E;
+        tab[7] = 0x4E;
+        tab[8] = 0x4E;
+        tab[9] = 0x4E;
+        tab[10] = 0x4E;
+        tab[11] = 0x4E;
+        tab[12] = 0x4E;
+        tab[13] = 0x00;
+        tab[14] = 0x00;
+        */
+        
+        // get firmware version
+        tab[0] = 0x02; // request
+        tab[1] = 0x00; // echo
+        tab[2] = 0x07;
+        tab[3] = 0x1E;
+        tab[4] = 0x21;
         tab[5] = 0x4E;
         tab[6] = 0x4E;
         tab[7] = 0x4E;
