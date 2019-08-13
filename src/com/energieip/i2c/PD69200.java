@@ -43,8 +43,6 @@ public class PD69200 {
 		i2c_bus = _i2c_bus;
 		
 		initi2c();
-
-		//generateEcho();
 		
 		int version = pse_get_software_version();
 		
@@ -54,15 +52,6 @@ public class PD69200 {
 		// readThread.start();
 
 	} // end of constructor
-
-	/**
-	 * Generate first time Echo
-	 */
-	private void generateEcho() {
-		byte[] b = new byte[1];
-		new Random().nextBytes(b);
-		echo = b[0];
-	}
 
 	/**
 	 * initialize I2C
