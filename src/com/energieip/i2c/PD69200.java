@@ -42,23 +42,15 @@ public class PD69200 implements Runnable {
 	public PD69200(int _i2c_bus) {
 		
 		i2c_bus = _i2c_bus;
-
-		try {
-
+	
+		
 			initi2c();
-			resetPSE();
+			//resetPSE();
 			//initPSE();
 
 			//readThread = new Thread(this);
 			//readThread.start();
-
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	} // end of constructor
 
 	/**
