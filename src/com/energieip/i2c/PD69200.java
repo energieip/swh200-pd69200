@@ -55,9 +55,11 @@ public class PD69200 {
 	 * Generate first time Echo
 	 */
 	private void generateEcho() {
+		do {
 		byte[] b = new byte[1];
 		new Random().nextBytes(b);
-		echo = b[0];	
+		echo = b[0];
+		}while(echo<0x70);
 	}
 
 	/**
