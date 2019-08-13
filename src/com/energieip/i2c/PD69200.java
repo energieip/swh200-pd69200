@@ -2,6 +2,7 @@ package com.energieip.i2c;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Random;
 
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
@@ -40,14 +41,24 @@ public class PD69200 {
 	public PD69200(int _i2c_bus) {
 
 		i2c_bus = _i2c_bus;
-
+		
 		initi2c();
-		// initPSE();
 
+		generateEcho();
+		
 		// readThread = new Thread(this);
 		// readThread.start();
 
 	} // end of constructor
+
+	/**
+	 * Generate first time Echo
+	 */
+	private void generateEcho() {
+		byte[] b = new byte[1];
+		new Random().nextBytes(b);
+		echo = b[0];	
+	}
 
 	/**
 	 * initialize I2C
