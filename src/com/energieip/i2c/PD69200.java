@@ -1,4 +1,4 @@
-package com.energieip.i2c.old;
+package com.energieip.i2c;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -8,16 +8,17 @@ import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
 
-public class PD69200_old implements Runnable {
+public class PD69200 implements Runnable {
 
 	// I2C generic
 	private I2CBus bus;
 	private I2CBus i2c;
 	private I2CDevice device;
-
+	
 	// PD69200 I2C address
 	private final int PD69200_ADDR = 0x3C;
 	private final int NUMBER_OF_LOGICAL_PORTS = 24;
+	private int i2c_bus;
 
 	// message tab
 	private byte[] tab = new byte[15]; // output buffer tab
@@ -32,19 +33,15 @@ public class PD69200_old implements Runnable {
 	final int POWER_MAX = 6000;
 	final int POWER_MIN = 0;
 	
-	/**
-	 * Main entry Point
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		new PD69200_old();
-	}
+
 
 	/**
 	 * Default constructor
+	 * @param i2c_bus 
 	 */
-	public PD69200_old() {
+	public PD69200(int _i2c_bus) {
+		
+		i2c_bus = _i2c_bus;
 
 		try {
 
@@ -194,7 +191,14 @@ public class PD69200_old implements Runnable {
 			System.out.println("Initializing I2C...");
 			ids = I2CFactory.getBusIds();
 			System.out.println("Found follow I2C busses: " + Arrays.toString(ids));
-			bus = I2CFactory.getInstance(I2CBus.BUS_1);
+			if(i2c_bus==0){
+				bus = I2CFactory.getInstance(I2CBus.BUS_0);
+			} else if(i2c_bus==1) {
+				bus = I2CFactory.getInstance(I2CBus.BUS_1);
+			} else {
+				System.err.println("[ERROR], bad I2C bus");
+				System.exit(0);
+			}
 			System.out.println("Working with I2C bus " + bus.getBusNumber());
 			i2c = I2CFactory.getInstance(bus.getBusNumber());
 			device = i2c.getDevice(PD69200_ADDR);

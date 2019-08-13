@@ -1,4 +1,4 @@
-package com.energieip.i2c;
+package com.energieip.i2c.Pi4Jexamples;
 
 import java.io.IOException;
 import java.util.Arrays;
