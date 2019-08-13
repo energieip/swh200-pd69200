@@ -59,7 +59,7 @@ public class PD69200 {
 		byte[] b = new byte[1];
 		new Random().nextBytes(b);
 		echo = b[0];
-		}while(echo<0x70);
+		}while(echo<0x70&&echo>0);
 	}
 
 	/**
