@@ -44,9 +44,9 @@ public class PD69200 {
 		
 		initi2c();
 
-		generateEcho();
+		//generateEcho();
 		
-		pse_get_software_version();
+		int version = pse_get_software_version();
 		
 		
 		
