@@ -57,7 +57,7 @@ public class PD69200 {
 		try {
 			System.out.println("Initializing I2C...");
 			ids = I2CFactory.getBusIds();
-			System.out.println("Found follow I2C busses: " + Arrays.toString(ids));
+			System.out.println("Found I2C bus: " + Arrays.toString(ids));
 			if (i2c_bus == 0) {
 				bus = I2CFactory.getInstance(I2CBus.BUS_0);
 			} else if (i2c_bus == 1) {
