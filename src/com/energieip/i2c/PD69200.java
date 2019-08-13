@@ -8,7 +8,7 @@ import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
 
-public class PD69200 implements Runnable {
+public class PD69200  {
 
 	// I2C generic
 	private I2CBus bus;
@@ -25,10 +25,6 @@ public class PD69200 implements Runnable {
 	private byte echo = 0;
 	private byte[] buf = new byte[15]; // input buffer tab
 
-	// thread
-	Thread readThread;
-	private int SCAN_RATE = 1000; // in milliseconds
-
 	// const
 	final int POWER_MAX = 6000;
 	final int POWER_MIN = 0;
@@ -43,117 +39,12 @@ public class PD69200 implements Runnable {
 		i2c_bus = _i2c_bus;
 
 		initi2c();
-		// resetPSE();
 		// initPSE();
 
 		// readThread = new Thread(this);
 		// readThread.start();
 
 	} // end of constructor
-
-	/**
-	 * initialize PSE
-	 * 
-	 * @throws InterruptedException
-	 * @throws IOException
-	 */
-	private void initPSE() throws InterruptedException, IOException {
-		System.out.println("[WAIT] Initializing PSE...");
-
-		// enable channels
-		// pse_enable_channels(get_echo());
-		// Thread.sleep(50); // wait 50 ms
-
-		byte[] tab = new byte[15]; // output buffer tab
-		tab = pse_get_software_version(get_echo());
-		System.out.println("\npse_get_sofware_version");
-		buf = new byte[15];
-		while (true) {
-			int res = device.read(buf, 0, 1);
-			if (buf[0] != 0) {
-				int pos = device.read(buf, 1, 14);
-				System.out.println("POS=" + pos);
-				break;
-			}
-		}
-		System.out.println("\npse_get_sofware_version");
-		printBuffer(buf);
-
-		// enable 4 pairs and PoH
-		tab = new byte[15]; // output buffer tab
-		tab = pse_set_4_pair_ports_parameters(get_echo());
-		System.out.println("\npse_set_4_pair_ports_parameters");
-		printBuffer(tab);
-		device.write(tab);
-		Thread.sleep(50); // wait 50 ms
-
-		tab = new byte[15]; // output buffer tab
-		tab = pse_get_4_pair_ports_parameters(get_echo());
-		device.write(tab);
-		// Thread.sleep(50); // wait 50 ms
-
-		buf = new byte[15];
-		while (true) {
-			int res = device.read(buf, 0, 1);
-			if (buf[0] == 0x03) {
-				int pos = device.read(buf, 1, 14);
-				System.out.println("POS=" + pos);
-				break;
-			}
-		}
-		System.out.println("\npse_get_4_pair_ports_parameters");
-		printBuffer(buf);
-
-		// enable new matrix (4 pairs)
-		tab = pse_set_individual_mask(get_echo());
-		System.out.println("\npse_set_individual_mask");
-		printBuffer(tab);
-		device.write(tab);
-		Thread.sleep(50); // wait 50 ms
-
-		// set power limit to 62W (0XFF 0xFE)
-		// pse_set_4_pair_power_limit(get_echo());
-		// Thread.sleep(100); // wait 100 ms
-
-		byte ll = 0x00;
-		for (int l = 0; l < NUMBER_OF_LOGICAL_PORTS; l++) {
-			tab = pse_set_temporary_matrix(get_echo(), ll);
-			device.write(tab);
-			ll++;
-			Thread.sleep(50); // wait 50 ms
-		}
-
-		tab = pse_program_global_matrix(get_echo());
-		device.write(tab);
-		Thread.sleep(50); // wait 50 ms
-
-		tab = pse_enable_4_pair_for_channels(get_echo());
-		device.write(tab);
-		Thread.sleep(50); // wait 50 ms
-
-		// pse_force_power(get_echo());
-		// Thread.sleep(100); // wait 100 ms
-
-		/*
-		 * pse_get_power_limit(get_echo()); while (true) { int res =
-		 * device.read(buf, 0, 1); if (buf[0] != 0) { int pos = device.read(buf,
-		 * 1, 14); // System.out.println("go :" + i + " pos:" + pos); break; } }
-		 * System.out.println("[ACK] get power limit "); printBuffer(buf);
-		 */
-
-		// pse_save_settings(get_echo());
-		// System.out.println("[WAIT] Waiting for system backup ACK...");
-		// Thread.sleep(50); // wait 50 ms
-		// int i = 1;
-		/*
-		 * while (true) { int res = device.read(buf, 0, 1); if (buf[0] != 0) {
-		 * int pos = device.read(buf, 1, 14); // System.out.println("go :" + i +
-		 * " pos:" + pos); break; } }
-		 */
-		System.out.println("[OK] System backup complete");
-		Thread.sleep(100); // wait 100 ms
-
-	}
 
 	/**
 	 * initialize I2C
@@ -540,10 +431,11 @@ public class PD69200 implements Runnable {
 		return tab;
 	}
 
-	private byte[] pse_get_software_version(byte echo) {
-
+	public byte[] pse_get_software_version() {
+		
+		
 		tab[0] = (byte) 0x02; // command
-		tab[1] = echo;
+		tab[1] = get_echo();
 		tab[2] = (byte) 0x07; // global
 		tab[3] = (byte) 0x1E; // VersionZ
 		tab[4] = (byte) 0x21; // SW Version
@@ -828,34 +720,7 @@ public class PD69200 implements Runnable {
 		return echo;
 	}
 
-	@Override
-	public void run() {
-		while (!Thread.interrupted()) {
-			try {
-				System.out.println("Requesting total power...");
-				buf = new byte[15];
-				tab = pse_get_total_power(get_echo());
-				device.write(tab);
-				int i = 1;
-				while (true) {
-					int res = device.read(buf, 0, 1);
-					if (buf[0] != 0) {
-						int pos = device.read(buf, 1, 14);
-						// System.out.println("go :" + i + " pos:" + pos);
-						break;
-					}
-				}
-				printBuffer(buf);
-				extractData(buf);
-				Thread.sleep(SCAN_RATE);
-			} catch (InterruptedException e) {
-				// Nothing to do
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	} // end of thread
+
 
 	private void extractData(byte[] buffer) {
 		if (buffer[0] == 0x03) { // Telemetry
