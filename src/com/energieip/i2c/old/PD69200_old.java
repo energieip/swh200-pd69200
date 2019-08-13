@@ -9,7 +9,10 @@ import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
 
 public class PD69200_old implements Runnable {
-
+	
+	// API VERSION
+	public final String VERSION = "3.45";
+	
 	// I2C generic
 	private I2CBus bus;
 	private I2CBus i2c;

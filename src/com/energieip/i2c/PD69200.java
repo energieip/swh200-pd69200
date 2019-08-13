@@ -8,7 +8,10 @@ import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
 
-public class PD69200  {
+public class PD69200 {
+	
+	// API VERSION
+	public final String VERSION = "3.45";
 
 	// I2C generic
 	private I2CBus bus;
@@ -431,28 +434,54 @@ public class PD69200  {
 		return tab;
 	}
 
-	public byte[] pse_get_software_version() {
-		
-		
-		tab[0] = (byte) 0x02; // command
-		tab[1] = get_echo();
-		tab[2] = (byte) 0x07; // global
-		tab[3] = (byte) 0x1E; // VersionZ
-		tab[4] = (byte) 0x21; // SW Version
-		tab[5] = (byte) 0x4E;
-		tab[6] = (byte) 0x4E;
-		tab[7] = (byte) 0x4E;
-		tab[8] = (byte) 0x4E;
-		tab[9] = (byte) 0x4E;
-		tab[10] = (byte) 0x4E;
-		tab[11] = (byte) 0x4E;
-		tab[12] = (byte) 0x4E;
-		tab[13] = (byte) 0x00;
-		tab[14] = (byte) 0x00;
+	public int pse_get_software_version() {
 
-		tab = checksum(tab);
+		int version = 0;
 
-		return tab;
+		try {
+			tab[0] = (byte) 0x02; // command
+			tab[1] = get_echo();
+			tab[2] = (byte) 0x07; // global
+			tab[3] = (byte) 0x1E; // VersionZ
+			tab[4] = (byte) 0x21; // SW Version
+			tab[5] = (byte) 0x4E;
+			tab[6] = (byte) 0x4E;
+			tab[7] = (byte) 0x4E;
+			tab[8] = (byte) 0x4E;
+			tab[9] = (byte) 0x4E;
+			tab[10] = (byte) 0x4E;
+			tab[11] = (byte) 0x4E;
+			tab[12] = (byte) 0x4E;
+			tab[13] = (byte) 0x00;
+			tab[14] = (byte) 0x00;
+
+			tab = checksum(tab);
+
+			device.write(tab);
+
+			int i = 1;
+			while (true) {
+				int res = device.read(buf, 0, 1);
+				if (buf[0] != 0) {
+					int pos = device.read(buf, 1, 14);
+					// System.out.println("go :" + i + " pos:" + pos);
+					break;
+				}
+			}
+
+			// DEBUG
+			printBuffer(buf);
+
+			if (buf[0] == 0x03) { // Telemetry
+				version = ((buf[5] & 0xff) << 8) | (buf[6] & 0xff);
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return version;
 	}
 
 	private byte[] pse_get_power_supply_voltage(byte echo) {
@@ -719,8 +748,6 @@ public class PD69200  {
 		}
 		return echo;
 	}
-
-
 
 	private void extractData(byte[] buffer) {
 		if (buffer[0] == 0x03) { // Telemetry
