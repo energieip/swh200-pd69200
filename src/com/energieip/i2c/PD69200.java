@@ -46,6 +46,10 @@ public class PD69200 {
 
 		generateEcho();
 		
+		pse_get_software_version();
+		
+		
+		
 		// readThread = new Thread(this);
 		// readThread.start();
 
@@ -55,11 +59,9 @@ public class PD69200 {
 	 * Generate first time Echo
 	 */
 	private void generateEcho() {
-		do {
 		byte[] b = new byte[1];
 		new Random().nextBytes(b);
 		echo = b[0];
-		}while(echo<0x70&&echo>0);
 	}
 
 	/**
@@ -483,7 +485,7 @@ public class PD69200 {
 			}
 
 			// DEBUG
-			printBuffer(buf);
+			//printBuffer(buf);
 
 			if (buf[0] == 0x03) { // Telemetry
 				version = ((buf[5] & 0xff) << 8) | (buf[6] & 0xff);
