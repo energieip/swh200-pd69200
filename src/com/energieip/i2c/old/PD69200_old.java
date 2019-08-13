@@ -897,11 +897,8 @@ public class PD69200_old implements Runnable {
 				// do nothing
 			}else{
 				System.out.println("power= " + power + " W");
-			}
-			
+			}			
 		}
-		
-		
 	}
 
 	private void printBuffer(byte[] buf2) {
@@ -909,10 +906,10 @@ public class PD69200_old implements Runnable {
 		for (int j = 0; j < buf2.length; j++) {
 			System.out.println("buf["+j+"]=" + (buf2[j]));
 		}
-		System.out.println("**********************");
-		
+		System.out.println("**********************");		
 	} // end of printBuffer
 
+	
 } // end of class
 
 // end of code

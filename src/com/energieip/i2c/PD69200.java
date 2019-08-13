@@ -44,9 +44,7 @@ public class PD69200 {
 		
 		initi2c();
 		
-		int version = pse_get_software_version();
-		
-		
+		pse_get_software_version();
 		
 		// readThread = new Thread(this);
 		// readThread.start();
@@ -464,6 +462,7 @@ public class PD69200 {
 			device.write(tab);
 
 			int i = 1;
+			
 			while (true) {
 				int res = device.read(buf, 0, 1);
 				if (buf[0] != 0) {
