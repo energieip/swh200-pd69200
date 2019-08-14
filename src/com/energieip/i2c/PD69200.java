@@ -2,7 +2,6 @@ package com.energieip.i2c;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Random;
 
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
@@ -32,6 +31,9 @@ public class PD69200 {
 	// const
 	final int POWER_MAX = 6000;
 	final int POWER_MIN = 0;
+	
+	// debug
+	boolean DEBUG = false;
 
 	/**
 	 * Default constructor
@@ -42,12 +44,11 @@ public class PD69200 {
 
 		i2c_bus = _i2c_bus;
 		
+		// initialize I2C
 		initi2c();
 		
+		// first command, initialize echo
 		pse_get_software_version();
-		
-		// readThread = new Thread(this);
-		// readThread.start();
 
 	} // end of constructor
 
@@ -57,9 +58,13 @@ public class PD69200 {
 	private void initi2c() {
 		int[] ids;
 		try {
-			System.out.println("Initializing I2C...");
+			if(DEBUG){
+				System.out.println("Initializing I2C...");
+			}
 			ids = I2CFactory.getBusIds();
-			System.out.println("Found I2C bus: " + Arrays.toString(ids));
+			if(DEBUG){
+				System.out.println("Found I2C bus: " + Arrays.toString(ids));
+			}
 			if (i2c_bus == 0) {
 				bus = I2CFactory.getInstance(I2CBus.BUS_0);
 			} else if (i2c_bus == 1) {
@@ -68,7 +73,9 @@ public class PD69200 {
 				System.err.println("[ERROR], bad I2C bus");
 				System.exit(0);
 			}
-			System.out.println("Working with I2C bus " + bus.getBusNumber());
+			if(DEBUG){
+				System.out.println("Working with I2C bus " + bus.getBusNumber());
+			}
 			i2c = I2CFactory.getInstance(bus.getBusNumber());
 			device = i2c.getDevice(PD69200_ADDR);
 
