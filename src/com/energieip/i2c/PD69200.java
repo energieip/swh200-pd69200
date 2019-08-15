@@ -33,7 +33,7 @@ public class PD69200 {
 	final int POWER_MIN = 0;
 	
 	// debug
-	boolean DEBUG = true;
+	boolean DEBUG = false;
 
 	/**
 	 * Default constructor
