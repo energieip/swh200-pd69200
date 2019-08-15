@@ -476,6 +476,65 @@ public class PD69200 {
 	return power;
 }
 	
+	
+	
+	public String pse_get_BT_class_power(int class_type) {
+
+		int class_power_value=0;
+		int added_class_power_value=0;
+		int max_added_class_power_value=0;
+		
+		try {
+			tab[0] = (byte) 0x02; // command
+			tab[1] = get_echo();
+			tab[2] = (byte) 0x07; // global
+			tab[3] = (byte) 0xD2; // BT Class Power
+			tab[4] = (byte) class_type; // class type
+			tab[5] = (byte) 0x4E;
+			tab[6] = (byte) 0x4E;
+			tab[7] = (byte) 0x4E;
+			tab[8] = (byte) 0x4E;
+			tab[9] = (byte) 0x4E;
+			tab[10] = (byte) 0x4E;
+			tab[11] = (byte) 0x4E;
+			tab[12] = (byte) 0x4E;
+			tab[13] = (byte) 0x00;
+			tab[14] = (byte) 0x00;
+
+			tab = checksum(tab);
+
+			device.write(tab);
+
+			int i = 1;
+			
+			while (true) {
+				int res = device.read(buf, 0, 1);
+				if (buf[0] != 0) {
+					int pos = device.read(buf, 1, 14);
+					break;
+				}
+			}
+
+			if(DEBUG) {
+				printBuffer(buf);
+			}
+			
+			if (buf[0] == 0x03) { // Telemetry
+				class_power_value = ((buf[2] & 0xff) << 8) | (buf[3] & 0xff);
+				added_class_power_value = buf[4];
+				max_added_class_power_value = buf[5];
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return Integer.toString(class_power_value)+" "+Integer.toString(added_class_power_value)+" "+Integer.toString(max_added_class_power_value);
+	}
+
+	
+	
 	/**
 	 * return PSE software version
 	 * @return int
