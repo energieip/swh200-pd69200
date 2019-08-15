@@ -745,7 +745,7 @@ public class PD69200 {
 			tab = checksum(tab);
 			
 			if(DEBUG){
-				printBuffer(buf);
+				printBuffer(tab);
 			}
 			
 			device.write(tab);
