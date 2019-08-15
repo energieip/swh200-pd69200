@@ -87,14 +87,6 @@ public class PD69200 {
 		}
 	} // end of init
 
-	private void resetPSE() throws InterruptedException, IOException {
-		System.out.println("[WAIT] resetting PSE...");
-		tab = new byte[15]; // output buffer tab
-		tab = pse_reset_to_factory_default(get_echo());
-		device.write(tab);
-
-		Thread.sleep(100); // wait 100 ms
-	}
 
 	private byte[] pse_set_temporary_matrix(byte get_echo, byte l) {
 
@@ -388,6 +380,41 @@ public class PD69200 {
 		tab[5] = (byte) 0x4E;
 		tab[6] = (byte) 0x4E;
 		tab[7] = (byte) 0x4E;
+		tab[8] = (byte) 0x4E;
+		tab[9] = (byte) 0x4E;
+		tab[10] = (byte) 0x4E;
+		tab[11] = (byte) 0x4E;
+		tab[12] = (byte) 0x4E;
+		tab[13] = (byte) 0x00;
+		tab[14] = (byte) 0x00;
+
+		tab = checksum(tab);
+		
+		device.write(tab);
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		return true;
+	}
+	
+
+	/**
+	 * Reset PSE
+	 * @return boolean
+	 */
+	public boolean pse_reset_command() {
+
+		try{
+		tab[0] = (byte) 0x0; // command
+		tab[1] = get_echo();
+		tab[2] = (byte) 0x07; // gloabl
+		tab[3] = (byte) 0x55; // reset
+		tab[4] = (byte) 0x00;
+		tab[5] = (byte) 0x55; // reset
+		tab[6] = (byte) 0x00;
+		tab[7] = (byte) 0x55; // reset
 		tab[8] = (byte) 0x4E;
 		tab[9] = (byte) 0x4E;
 		tab[10] = (byte) 0x4E;
