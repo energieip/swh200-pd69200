@@ -743,15 +743,17 @@ public class PD69200 {
 			tab[14] = (byte) 0x00;
 
 			tab = checksum(tab);
-
+			
+			if(DEBUG){
+				printBuffer(buf);
+			}
+			
 			device.write(tab);
-
-			int i = 1;
 			
 			while (true) {
-				int res = device.read(buf, 0, 1);
+				device.read(buf, 0, 1);
 				if (buf[0] != 0) {
-					int pos = device.read(buf, 1, 14);
+					device.read(buf, 1, 14);
 					break;
 				}
 			}
