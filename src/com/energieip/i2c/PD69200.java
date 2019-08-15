@@ -489,7 +489,7 @@ public class PD69200 {
 			tab[1] = get_echo();
 			tab[2] = (byte) 0x07; // global
 			tab[3] = (byte) 0xD2; // BT Class Power
-			tab[4] = (byte) class_type; // class type
+			tab[4] = (byte) 0x08; // class type
 			tab[5] = (byte) 0x4E;
 			tab[6] = (byte) 0x4E;
 			tab[7] = (byte) 0x4E;
