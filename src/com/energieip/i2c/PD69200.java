@@ -419,8 +419,16 @@ public class PD69200 {
 
 		return tab;
 	}
+	
+	/**
+	 * return PSE total power
+	 * @return int
+	 */
+	public int pse_get_total_power() {
+		
+		int power = 0;
 
-	private byte[] pse_get_total_power(byte echo) {
+		try {
 
 		tab[0] = (byte) 0x02; // command
 		tab[1] = echo;
@@ -440,9 +448,38 @@ public class PD69200 {
 
 		tab = checksum(tab);
 
-		return tab;
+		device.write(tab);
+
+		int i = 1;
+		
+		while (true) {
+			int res = device.read(buf, 0, 1);
+			if (buf[0] != 0) {
+				int pos = device.read(buf, 1, 14);
+				break;
+			}
+		}
+
+		if(DEBUG){
+			printBuffer(buf);
+		}
+
+		if (buf[0] == 0x03) { // Telemetry
+			power = ((buf[2] & 0xff) << 8) | (buf[3] & 0xff);	
+		}
+
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
 	}
 
+	return power;
+}
+	
+	/**
+	 * return PSE software version
+	 * @return int
+	 */
 	public int pse_get_software_version() {
 
 		int version = 0;
@@ -759,25 +796,17 @@ public class PD69200 {
 		return echo;
 	}
 
-	private void extractData(byte[] buffer) {
-		if (buffer[0] == 0x03) { // Telemetry
-			int power = ((buffer[2] & 0xff) << 8) | (buffer[3] & 0xff);
-			if (power > POWER_MAX || power < POWER_MIN) {
-				// do nothing
-			} else {
-				System.out.println("power= " + power + " W");
-			}
-
-		}
-
-	}
-
+	/**
+	 * print buffer content, debug purpose
+	 * @param byte[]
+	 */
+	@SuppressWarnings("unused")
 	private void printBuffer(byte[] buf2) {
-		System.out.println("**********************");
+		System.out.println("[DEBUG] **********************");
 		for (int j = 0; j < buf2.length; j++) {
-			System.out.println("buf[" + j + "]=" + (buf2[j]));
+			System.out.println("[DEBUG] buf[" + j + "]=" + (buf2[j]));
 		}
-		System.out.println("**********************");
+		System.out.println("[DEBUG] **********************");
 
 	} // end of printBuffer
 
