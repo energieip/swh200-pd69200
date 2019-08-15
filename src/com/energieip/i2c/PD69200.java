@@ -729,7 +729,7 @@ public class PD69200 {
 			tab[0] = (byte) 0x02; // request
 			tab[1] = get_echo();
 			tab[2] = (byte) 0x05; // channel
-			tab[3] = (byte) 0xC0; // BT Port Config1 
+			tab[3] = (byte) (0xC0 & 0xFF); // BT Port Config1 
 			tab[4] = (byte) port_num;
 			tab[5] = (byte) 0x4E;
 			tab[6] = (byte) 0x4E;
