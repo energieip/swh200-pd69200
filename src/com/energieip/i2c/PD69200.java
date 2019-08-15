@@ -523,6 +523,11 @@ public class PD69200 {
 				class_power_value = ((buf[2] & 0xff) << 8) | (buf[3] & 0xff);
 				added_class_power_value = buf[4];
 				max_added_class_power_value = buf[5];
+				if(DEBUG){
+					System.out.println("AddedClassPowerValue=" + class_power_value);
+					System.out.println("AddedClassPowerValue=" + buf[4]);
+					System.out.println("MaxAddedClassPowerValue=" + buf[5]);					
+				}
 			}
 
 		} catch (IOException e) {
