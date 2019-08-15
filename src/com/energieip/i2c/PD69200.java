@@ -788,6 +788,79 @@ public class PD69200 {
 
 		return Integer.toString(port_status)+" "+Integer.toString(port_mode_CFG1)+" "+Integer.toString(port_mode_CFG2)+" "+Integer.toString(port_operation_mode)+" "+Integer.toString(add_power_for_port_mode)+" "+Integer.toString(priority);
 	}
+	
+	/**
+	 * pse_get_BT_port_status
+	 * @param int port_num
+	 * @return String
+	 */
+	public String pse_get_BT_port_status(int port_num) {
+
+		int port_status=0;
+		int port_mode_CFG1=0;
+		int assigned_class=0;
+		int measured_port_power=0;		
+		
+		try {
+			tab[0] = (byte) 0x02; // request
+			tab[1] = get_echo();
+			tab[2] = (byte) 0x05; // channel
+			tab[3] = (byte) 0xC1; // BT Port status 
+			tab[4] = (byte) port_num;
+			tab[5] = (byte) 0x4E;
+			tab[6] = (byte) 0x4E;
+			tab[7] = (byte) 0x4E;
+			tab[8] = (byte) 0x4E;
+			tab[9] = (byte) 0x4E;
+			tab[10] = (byte) 0x4E;
+			tab[11] = (byte) 0x4E;
+			tab[12] = (byte) 0x4E;
+			tab[13] = (byte) 0x00;
+			tab[14] = (byte) 0x00;
+
+			tab = checksum(tab);
+			
+			if(DEBUG){
+				printBuffer(tab);
+			}
+			
+			device.write(tab);
+			
+			while (true) {
+				device.read(buf, 0, 1);
+				if (buf[0] != 0) {
+					device.read(buf, 1, 14);
+					break;
+				}
+			}
+
+			if(DEBUG) {
+				printBuffer(buf);
+			}
+			
+			if (buf[0] == 0x03) { // Telemetry
+				
+				port_status = buf[2];
+				port_mode_CFG1 = buf[3];
+				assigned_class = buf[4];
+				measured_port_power = ((buf[5] & 0xff) << 8) | (buf[6] & 0xff);	
+				
+				
+				if(DEBUG){
+					System.out.println("port_status=" + port_status);
+					System.out.println("port_mode_CFG1=" + port_mode_CFG1);
+					System.out.println("assigned_class=" + assigned_class);		
+					System.out.println("measured_port_power=" + measured_port_power);		
+				}
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return Integer.toString(port_status)+" "+Integer.toString(port_mode_CFG1)+" "+Integer.toString(assigned_class)+" "+Integer.toString(measured_port_power);
+	}
 
 
 	
