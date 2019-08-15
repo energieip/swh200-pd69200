@@ -20,7 +20,6 @@ public class PD69200 {
 
 	// PD69200 I2C address
 	private final int PD69200_ADDR = 0x3C;
-	private final int NUMBER_OF_LOGICAL_PORTS = 24;
 	private int i2c_bus;
 
 	// message tab
