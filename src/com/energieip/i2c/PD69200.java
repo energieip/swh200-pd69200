@@ -32,7 +32,7 @@ public class PD69200 {
 	final int POWER_MIN = 0;
 	
 	// debug
-	boolean DEBUG = false;
+	boolean DEBUG = true;
 
 	/**
 	 * Default constructor
@@ -638,6 +638,79 @@ public class PD69200 {
 
 		return Integer.toString(class_power_value)+" "+Integer.toString(added_class_power_value)+" "+Integer.toString(max_added_class_power_value);
 	}
+	
+	/**
+	 * pse_get_BT_system_status
+	 * @return String
+	 */
+	public String pse_get_BT_system_status() {
+
+		int cpu_status_err_codes=0;
+		int factory_default=0;
+		int RAM_private_label=0;
+		int NVM_user_byte=0;
+		int found_devices=0;
+		
+		try {
+			tab[0] = (byte) 0x02; // request
+			tab[1] = get_echo();
+			tab[2] = (byte) 0x07; // global
+			tab[3] = (byte) 0xD0; // BT system status
+			tab[4] = (byte) 0x4E;
+			tab[5] = (byte) 0x4E;
+			tab[6] = (byte) 0x4E;
+			tab[7] = (byte) 0x4E;
+			tab[8] = (byte) 0x4E;
+			tab[9] = (byte) 0x4E;
+			tab[10] = (byte) 0x4E;
+			tab[11] = (byte) 0x4E;
+			tab[12] = (byte) 0x4E;
+			tab[13] = (byte) 0x00;
+			tab[14] = (byte) 0x00;
+
+			tab = checksum(tab);
+
+			device.write(tab);
+
+			int i = 1;
+			
+			while (true) {
+				int res = device.read(buf, 0, 1);
+				if (buf[0] != 0) {
+					int pos = device.read(buf, 1, 14);
+					break;
+				}
+			}
+
+			if(DEBUG) {
+				printBuffer(buf);
+			}
+			
+			if (buf[0] == 0x03) { // Telemetry
+				
+				cpu_status_err_codes = buf[3];
+				factory_default = buf[4];
+				RAM_private_label= buf[6];
+				NVM_user_byte = buf[7];
+				found_devices = buf[8];
+				
+				if(DEBUG){
+					System.out.println("cpu_status_err_codes=" + cpu_status_err_codes);
+					System.out.println("factory_default=" + factory_default);
+					System.out.println("RAM_private_label=" + RAM_private_label);		
+					System.out.println("NVM_user_byte=" + NVM_user_byte);		
+					System.out.println("found_devices=" + found_devices);
+				}
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return Integer.toString(cpu_status_err_codes)+" "+Integer.toString(factory_default)+" "+Integer.toString(RAM_private_label)+" "+Integer.toString(NVM_user_byte)+" "+Integer.toString(found_devices);
+	}
+
 
 	
 	
