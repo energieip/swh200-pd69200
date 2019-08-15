@@ -448,13 +448,11 @@ public class PD69200 {
 		tab = checksum(tab);
 
 		device.write(tab);
-
-		int i = 1;
-		
+	
 		while (true) {
-			int res = device.read(buf, 0, 1);
+			device.read(buf, 0, 1);
 			if (buf[0] != 0) {
-				int pos = device.read(buf, 1, 14);
+				device.read(buf, 1, 14);
 				break;
 			}
 		}
@@ -476,6 +474,61 @@ public class PD69200 {
 }
 	
 	
+	public String pse_get_port_number_from_active_matrix(int channel) {
+
+		int Physical_number_A=0;
+		int Physical_number_B=0;
+		
+		try {
+			tab[0] = (byte) 0x02; // command
+			tab[1] = get_echo();
+			tab[2] = (byte) 0x05; // channel
+			tab[3] = (byte) 0x44; // channel matrix
+			tab[4] = (byte) channel; // channel number
+			tab[5] = (byte) 0x4E;
+			tab[6] = (byte) 0x4E;
+			tab[7] = (byte) 0x4E;
+			tab[8] = (byte) 0x4E;
+			tab[9] = (byte) 0x4E;
+			tab[10] = (byte) 0x4E;
+			tab[11] = (byte) 0x4E;
+			tab[12] = (byte) 0x4E;
+			tab[13] = (byte) 0x00;
+			tab[14] = (byte) 0x00;
+
+			tab = checksum(tab);
+
+			device.write(tab);
+						
+			while (true) {
+				device.read(buf, 0, 1);
+				if (buf[0] != 0) {
+					device.read(buf, 1, 14);
+					break;
+				}
+			}
+
+			if(DEBUG) {
+				printBuffer(buf);
+			}
+			
+			if (buf[0] == 0x03) { // Telemetry
+				Physical_number_A = buf[2];
+				Physical_number_B = buf[3];
+				if(DEBUG){
+					System.out.println("Physical_number_A=" + Physical_number_A);
+					System.out.println("Physical_number_B=" + Physical_number_B);
+				}
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return Integer.toString(Physical_number_A)+" "+Integer.toString(Physical_number_B);
+	}
+	
 	
 	public String pse_get_BT_class_power(int class_type) {
 
@@ -488,7 +541,7 @@ public class PD69200 {
 			tab[1] = get_echo();
 			tab[2] = (byte) 0x07; // global
 			tab[3] = (byte) 0xD2; // BT Class Power
-			tab[4] = (byte) 0x08; // class type
+			tab[4] = (byte) class_type; // class type
 			tab[5] = (byte) 0x4E;
 			tab[6] = (byte) 0x4E;
 			tab[7] = (byte) 0x4E;
