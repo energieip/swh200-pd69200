@@ -710,6 +710,82 @@ public class PD69200 {
 
 		return Integer.toString(cpu_status_err_codes)+" "+Integer.toString(factory_default)+" "+Integer.toString(RAM_private_label)+" "+Integer.toString(NVM_user_byte)+" "+Integer.toString(found_devices);
 	}
+	
+	/**
+	 * pse_get_BT_port_parameters
+	 * @param int port_num
+	 * @return string
+	 */
+	public String pse_get_BT_port_parameters(int port_num) {
+
+		int port_status=0;
+		int port_mode_CFG1=0;
+		int port_mode_CFG2=0;
+		int port_operation_mode=0;
+		int add_power_for_port_mode=0;
+		int priority=0;		
+		
+		try {
+			tab[0] = (byte) 0x02; // request
+			tab[1] = get_echo();
+			tab[2] = (byte) 0x05; // channel
+			tab[3] = (byte) 0xC0; // BT Port Config1 
+			tab[4] = (byte) port_num;
+			tab[5] = (byte) 0x4E;
+			tab[6] = (byte) 0x4E;
+			tab[7] = (byte) 0x4E;
+			tab[8] = (byte) 0x4E;
+			tab[9] = (byte) 0x4E;
+			tab[10] = (byte) 0x4E;
+			tab[11] = (byte) 0x4E;
+			tab[12] = (byte) 0x4E;
+			tab[13] = (byte) 0x00;
+			tab[14] = (byte) 0x00;
+
+			tab = checksum(tab);
+
+			device.write(tab);
+
+			int i = 1;
+			
+			while (true) {
+				int res = device.read(buf, 0, 1);
+				if (buf[0] != 0) {
+					int pos = device.read(buf, 1, 14);
+					break;
+				}
+			}
+
+			if(DEBUG) {
+				printBuffer(buf);
+			}
+			
+			if (buf[0] == 0x03) { // Telemetry
+				
+				port_status = buf[2];
+				port_mode_CFG1 = buf[3];
+				port_mode_CFG2 = buf[4];
+				port_operation_mode = buf[5];
+				add_power_for_port_mode = buf[6];
+				priority = buf[7];
+				
+				if(DEBUG){
+					System.out.println("port_status=" + port_status);
+					System.out.println("port_mode_CFG1=" + port_mode_CFG1);
+					System.out.println("port_mode_CFG2=" + port_mode_CFG2);		
+					System.out.println("port_operation_mode=" + port_operation_mode);		
+					System.out.println("add_power_for_port_mode=" + add_power_for_port_mode);
+					System.out.println("priority=" + priority);
+				}
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return Integer.toString(port_status)+" "+Integer.toString(port_mode_CFG1)+" "+Integer.toString(port_mode_CFG2)+" "+Integer.toString(port_operation_mode)+" "+Integer.toString(add_power_for_port_mode)+" "+Integer.toString(priority);
+	}
 
 
 	
