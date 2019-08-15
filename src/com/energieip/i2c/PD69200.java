@@ -370,13 +370,18 @@ public class PD69200 {
 		return tab;
 	}
 
-	private byte[] pse_save_system_settings(byte echo) {
+	/**
+	 * pse_save_system_settings
+	 * @return boolean
+	 */
+	public boolean pse_save_system_settings() {
 
 		// must wait 50ms before using I2C when sending this command
 		// response should come after 50ms
-
+		
+		try{
 		tab[0] = (byte) 0x1; // program
-		tab[1] = echo;
+		tab[1] = get_echo();
 		tab[2] = (byte) 0x06;
 		tab[3] = (byte) 0x0F; // save config
 		tab[4] = (byte) 0x4E;
@@ -392,8 +397,14 @@ public class PD69200 {
 		tab[14] = (byte) 0x00;
 
 		tab = checksum(tab);
+		
+		device.write(tab);
 
-		return tab;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		return true;
 	}
 
 	private byte[] pse_get_system_status(byte echo) {
@@ -792,29 +803,6 @@ public class PD69200 {
 		tab[1] = echo;
 		tab[2] = (byte) 0x01; // 4 pairs
 		tab[3] = port;
-		tab[4] = (byte) 0x4E;
-		tab[5] = (byte) 0x4E;
-		tab[6] = (byte) 0x4E;
-		tab[7] = (byte) 0x4E;
-		tab[8] = (byte) 0x4E;
-		tab[9] = (byte) 0x4E;
-		tab[10] = (byte) 0x4E;
-		tab[11] = (byte) 0x4E;
-		tab[12] = (byte) 0x4E;
-		tab[13] = (byte) 0x00;
-		tab[14] = (byte) 0x00;
-
-		tab = checksum(tab);
-
-		return tab;
-	}
-
-	private byte[] pse_save_settings(byte echo) {
-
-		tab[0] = (byte) 0x01; // command
-		tab[1] = echo;
-		tab[2] = (byte) 0x06;
-		tab[3] = (byte) 0x0F;
 		tab[4] = (byte) 0x4E;
 		tab[5] = (byte) 0x4E;
 		tab[6] = (byte) 0x4E;
