@@ -188,29 +188,6 @@ public class PD69200 {
 		return tab;
 	}
 
-	private byte[] pse_reset_to_factory_default(byte echo) {
-
-		tab[0] = (byte) 0x01; // program
-		tab[1] = echo;
-		tab[2] = (byte) 0x2D;
-		tab[3] = (byte) 0x4E;
-		tab[4] = (byte) 0x4E;
-		tab[5] = (byte) 0x4E;
-		tab[6] = (byte) 0x4E;
-		tab[7] = (byte) 0x4E;
-		tab[8] = (byte) 0x4E;
-		tab[9] = (byte) 0x4E;
-		tab[10] = (byte) 0x4E;
-		tab[11] = (byte) 0x4E;
-		tab[12] = (byte) 0x4E;
-		tab[13] = (byte) 0x00;
-		tab[14] = (byte) 0x00;
-
-		tab = checksum(tab);
-
-		return tab;
-	}
-
 	private byte[] pse_set_power_limit_for_channels(byte echo, byte channel) {
 
 		tab[0] = (byte) 0x00; // command
@@ -415,6 +392,40 @@ public class PD69200 {
 		tab[5] = (byte) 0x55; // reset
 		tab[6] = (byte) 0x00;
 		tab[7] = (byte) 0x55; // reset
+		tab[8] = (byte) 0x4E;
+		tab[9] = (byte) 0x4E;
+		tab[10] = (byte) 0x4E;
+		tab[11] = (byte) 0x4E;
+		tab[12] = (byte) 0x4E;
+		tab[13] = (byte) 0x00;
+		tab[14] = (byte) 0x00;
+
+		tab = checksum(tab);
+		
+		device.write(tab);
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		return true;
+	}
+	
+	/**
+	 * pse_restore_factory_default
+	 * @return boolean
+	 */
+	public boolean pse_restore_factory_default() {
+
+		try{
+		tab[0] = (byte) 0x01; // program
+		tab[1] = get_echo();
+		tab[2] = (byte) 0x2D; // restore factory default
+		tab[3] = (byte) 0x4E; 
+		tab[4] = (byte) 0x4E;
+		tab[5] = (byte) 0x4E;
+		tab[6] = (byte) 0x4E;
+		tab[7] = (byte) 0x4E; 
 		tab[8] = (byte) 0x4E;
 		tab[9] = (byte) 0x4E;
 		tab[10] = (byte) 0x4E;
