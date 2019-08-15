@@ -580,8 +580,9 @@ public class PD69200 {
 				}
 			}
 
-			// DEBUG
-			//printBuffer(buf);
+			if(DEBUG){
+				printBuffer(buf);
+			}
 
 			if (buf[0] == 0x03) { // Telemetry
 				version = ((buf[5] & 0xff) << 8) | (buf[6] & 0xff);
