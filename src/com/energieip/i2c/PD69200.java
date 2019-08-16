@@ -716,13 +716,13 @@ public class PD69200 {
 	
 	// LSB is the right part
 	private int byteToLSB(byte b) {
-		byte result = (byte) (b & 0xFF00);
+		byte result = (byte) (b >>4);
 		return byteToInt(result);
 	}
 	
 	// MSB is the left part
 	private int byteToMSB(byte b) {
-		byte result = (byte) ((b & 0xFF00) >> 8);
+		byte result = (byte) ((b & 0xFF) >> 4);
 		return byteToInt(result);
 	}
 
