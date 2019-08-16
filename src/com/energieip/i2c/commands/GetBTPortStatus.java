@@ -28,10 +28,14 @@ public class GetBTPortStatus {
 			int firstArg = Integer.parseInt(args[0]);
 			int secondArg = Integer.parseInt(args[1]);
 			PD69200 pd69200 = new PD69200(firstArg);
+			Thread.sleep(50);
 			System.out.println(pd69200.pse_get_BT_port_status(secondArg));
 		} catch (NumberFormatException e) {
 			System.err.println("Arguments" + args[0] + " and " + args[1] + " must be integers.");
 			System.exit(1);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
