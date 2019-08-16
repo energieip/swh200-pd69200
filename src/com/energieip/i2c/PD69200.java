@@ -688,11 +688,11 @@ public class PD69200 {
 			
 			if (buf[0] == 0x03) { // Telemetry
 				
-				cpu_status_err_codes = buf[3];
-				factory_default = buf[4];
-				RAM_private_label= buf[6];
-				NVM_user_byte = buf[7];
-				found_devices = buf[8];
+				cpu_status_err_codes = byteToInt(buf[3]);
+				factory_default = byteToInt(buf[4]);
+				RAM_private_label= byteToInt(buf[6]);
+				NVM_user_byte = byteToInt(buf[7]);
+				found_devices = byteToInt(buf[8]);
 				
 				if(DEBUG){
 					System.out.println("cpu_status_err_codes=" + cpu_status_err_codes);
@@ -711,6 +711,18 @@ public class PD69200 {
 		return Integer.toString(cpu_status_err_codes)+" "+Integer.toString(factory_default)+" "+Integer.toString(RAM_private_label)+" "+Integer.toString(NVM_user_byte)+" "+Integer.toString(found_devices);
 	}
 	
+	/**
+	 * byte To Java Int
+	 * @param b byte
+	 * @return int
+	 */
+	private int byteToInt(byte b) {
+		if(b<0){
+			b=(byte)(b+256);
+		}
+		return b;
+	}
+
 	/**
 	 * pse_get_BT_port_parameters
 	 * @param int port_num
