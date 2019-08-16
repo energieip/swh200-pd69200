@@ -649,7 +649,8 @@ public class PD69200 {
 		int factory_default=0;
 		int RAM_private_label=0;
 		int NVM_user_byte=0;
-		int found_devices=0;
+		int active_devices=0;
+		int found_devices_after_boot=0;
 		
 		try {
 			tab[0] = (byte) 0x02; // request
@@ -692,14 +693,16 @@ public class PD69200 {
 				factory_default = byteToInt(buf[4]);
 				RAM_private_label= byteToInt(buf[6]);
 				NVM_user_byte = byteToInt(buf[7]);
-				found_devices = byteToInt(buf[8]);
+				active_devices = byteToMSB(buf[8]);
+				found_devices_after_boot = byteToLSB(buf[8]);
 				
 				if(DEBUG){
 					System.out.println("cpu_status_err_codes=" + cpu_status_err_codes);
 					System.out.println("factory_default=" + factory_default);
 					System.out.println("RAM_private_label=" + RAM_private_label);		
 					System.out.println("NVM_user_byte=" + NVM_user_byte);		
-					System.out.println("found_devices=" + found_devices);
+					System.out.println("active_devices=" + active_devices);
+					System.out.println("found_devices_after_boot=" + found_devices_after_boot);
 				}
 			}
 
@@ -708,9 +711,22 @@ public class PD69200 {
 			e.printStackTrace();
 		}
 
-		return Integer.toString(cpu_status_err_codes)+" "+Integer.toString(factory_default)+" "+Integer.toString(RAM_private_label)+" "+Integer.toString(NVM_user_byte)+" "+Integer.toString(found_devices);
+		return Integer.toString(cpu_status_err_codes)+" "+Integer.toString(factory_default)+" "+Integer.toString(RAM_private_label)+" "+Integer.toString(NVM_user_byte)+" "+Integer.toString(active_devices)+" "+Integer.toString(found_devices_after_boot);
 	}
 	
+	// LSB is the right part
+	private int byteToLSB(byte b) {
+		byte result = (byte) (b & 0xFF00);
+		return byteToInt(result);
+	}
+	
+	// MSB is the left part
+	private int byteToMSB(byte b) {
+		byte result = (byte) ((b & 0xFF00) >> 8);
+		return byteToInt(result);
+	}
+
+
 	/**
 	 * byte To Java Int
 	 * @param b byte
