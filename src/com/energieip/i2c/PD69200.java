@@ -1131,22 +1131,20 @@ public class PD69200 {
 	/**
 	 * This method does the checksum
 	 * 
-	 * @param tab
-	 * @return
+	 * @param byte[]
+	 * @return byte[]
 	 */
 	private byte[] checksum(byte[] tab) {
-		int checksum = 0;
+		short checksum = 0;
 		for (int i = 0; i < tab.length - 2; i++) {
-			// System.out.println("i=" + i + " checksum=" + checksum);
-			checksum = checksum + tab[i];
+			checksum = (short) (checksum + tab[i]);
+			if(tab[i]<0){
+				checksum = (short) (checksum + 256);
+			}
 		}
-
-		short checksum_short = (short) checksum;
-		// System.out.println("checksum short=" + checksum_short);
-
-		tab[14] = (byte) (checksum_short & 0xff);
-		tab[13] = (byte) ((checksum_short >> 8) & 0xff);
-
+		tab[13] = (byte) ((checksum >> 8) & 0xff);
+		tab[14] = (byte) (checksum & 0xff);
+		
 		return tab;
 	} // end of checksum
 
