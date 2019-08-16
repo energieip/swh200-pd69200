@@ -717,10 +717,12 @@ public class PD69200 {
 	 * @return int
 	 */
 	private int byteToInt(byte b) {
-		if(b<0){
-			b=(byte)(b+256);
+		int a=0;
+		a = b;
+		if(a<0){
+			a=a+256;
 		}
-		return b;
+		return a;
 	}
 
 	/**
