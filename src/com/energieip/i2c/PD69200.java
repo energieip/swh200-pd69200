@@ -717,7 +717,7 @@ public class PD69200 {
 	// LSB is the right part
 	private int byteToLSB(byte b) {
 		byte result = (byte) (b >>4);
-		return byteToInt(result);
+		return result;
 	}
 	
 	// MSB is the left part
