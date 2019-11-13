@@ -37,7 +37,7 @@ public class GetPhysicalPortNumberFromActiveMatrix {
 					byte[] buf = pd69200.pse_get_physical_port_number_from_active_matrix((byte)i);
 					matrix[i][0] = buf[2];
 					matrix[i][1] = buf[3];
-					System.out.println("["+i+"] " + buf[2] + " " + buf[3]);
+					System.out.println("["+i+"] " + pd69200.byteToInt(buf[2]) + " " + pd69200.byteToInt(buf[3]));
 				}
 			}else {
 				byte[] buf = pd69200.pse_get_physical_port_number_from_active_matrix((byte)secondArg);
