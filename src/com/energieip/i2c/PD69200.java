@@ -86,51 +86,65 @@ public class PD69200 {
 		}
 	} // end of init
 
-	private byte[] pse_set_temporary_matrix(byte get_echo, byte l) {
+	public void pse_set_temporary_matrix(byte[][] matrix) {
+		try {
+			for (int i = 0; i < matrix.length; i++) {
 
-		tab[0] = (byte) 0x00; // command
-		tab[1] = echo;
-		tab[2] = (byte) 0x05; // channel
-		tab[3] = (byte) 0x43; // temporary matrix
-		tab[4] = l; // all ports
-		tab[5] = (byte) (l * (byte) 2);
-		tab[6] = (byte) (l * (byte) 2 + (byte) 1);
-		tab[7] = (byte) 0x4E;
-		tab[8] = (byte) 0x4E;
-		tab[9] = (byte) 0x4E;
-		tab[10] = (byte) 0x4E;
-		tab[11] = (byte) 0x4E;
-		tab[12] = (byte) 0x4E;
-		tab[13] = (byte) 0x00;
-		tab[14] = (byte) 0x00;
+				tab[0] = (byte) 0x00; // command
+				tab[1] = get_echo();
+				tab[2] = (byte) 0x05; // channel
+				tab[3] = (byte) 0x43; // temporary matrix
+				tab[4] = (byte) i; // logical port
+				tab[5] = matrix[i][0]; // Physical port A
+				tab[6] = matrix[i][1]; // Physical port B
+				tab[7] = (byte) 0x4E;
+				tab[8] = (byte) 0x4E;
+				tab[9] = (byte) 0x4E;
+				tab[10] = (byte) 0x4E;
+				tab[11] = (byte) 0x4E;
+				tab[12] = (byte) 0x4E;
+				tab[13] = (byte) 0x00;
+				tab[14] = (byte) 0x00;
+				tab = checksum(tab);
 
-		tab = checksum(tab);
-
-		return tab;
+				device.write(tab);
+				Thread.sleep(10);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
-	private byte[] pse_program_global_matrix(byte get_echo) {
+	public void pse_program_global_matrix() {
 
-		tab[0] = (byte) 0x00; // command
-		tab[1] = echo;
-		tab[2] = (byte) 0x07;
-		tab[3] = (byte) 0x43; // temporary matrix
-		tab[4] = (byte) 0x4E;
-		tab[5] = (byte) 0x4E;
-		tab[6] = (byte) 0x4E;
-		tab[7] = (byte) 0x4E;
-		tab[8] = (byte) 0x4E;
-		tab[9] = (byte) 0x4E;
-		tab[10] = (byte) 0x4E;
-		tab[11] = (byte) 0x4E;
-		tab[12] = (byte) 0x4E;
-		tab[13] = (byte) 0x00;
-		tab[14] = (byte) 0x00;
+		try {
+			tab[0] = (byte) 0x00; // command
+			tab[1] = get_echo();
+			tab[2] = (byte) 0x07;
+			tab[3] = (byte) 0x43; // temporary matrix
+			tab[4] = (byte) 0x4E;
+			tab[5] = (byte) 0x4E;
+			tab[6] = (byte) 0x4E;
+			tab[7] = (byte) 0x4E;
+			tab[8] = (byte) 0x4E;
+			tab[9] = (byte) 0x4E;
+			tab[10] = (byte) 0x4E;
+			tab[11] = (byte) 0x4E;
+			tab[12] = (byte) 0x4E;
+			tab[13] = (byte) 0x00;
+			tab[14] = (byte) 0x00;
+			tab = checksum(tab);
 
-		tab = checksum(tab);
-
-		return tab;
+			device.write(tab);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
@@ -448,7 +462,7 @@ public class PD69200 {
 	}
 
 	public int pse_get_total_power() {
-		
+
 		byte[] buf = new byte[15]; // input buffer tab
 		int power = 0;
 
@@ -499,10 +513,10 @@ public class PD69200 {
 	}
 
 	public byte[] pse_get_physical_port_number_from_active_matrix(byte logical_port) {
-		
+
 		byte[] buf = new byte[15]; // input buffer tab
-		
-		try{
+
+		try {
 			tab[0] = (byte) 0x02; // command
 			tab[1] = get_echo();
 			tab[2] = (byte) 0x05; // channel
@@ -518,11 +532,11 @@ public class PD69200 {
 			tab[12] = (byte) 0x4E;
 			tab[13] = (byte) 0x00;
 			tab[14] = (byte) 0x00;
-			
+
 			tab = checksum(tab);
-			
+
 			device.write(tab);
-			
+
 			while (true) {
 				int res = device.read(buf, 0, 1);
 				if (buf[0] != 0) {
@@ -602,7 +616,7 @@ public class PD69200 {
 	}
 
 	public String pse_get_BT_system_status() {
-		
+
 		byte[] buf = new byte[15]; // input buffer tab
 		int cpu_status_err_codes = 0;
 		int factory_default = 0;
@@ -821,7 +835,7 @@ public class PD69200 {
 	}
 
 	public int pse_get_software_version() {
-		
+
 		byte[] buf = new byte[15]; // input buffer tab
 		int version = 0;
 
@@ -1079,10 +1093,7 @@ public class PD69200 {
 
 		return tab;
 	}
-	
-	
-	
-	
+
 	// LSB is the right part
 	public int byteToLSB(byte b) {
 		byte result = (byte) (b >> 4);
