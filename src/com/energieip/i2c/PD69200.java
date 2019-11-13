@@ -535,16 +535,24 @@ public class PD69200 {
 
 			tab = checksum(tab);
 
-			device.write(tab);
+			for (int i = 0; i < 5; i++) { // 5 retry
 
-			while (true) {
-				int res = device.read(buf, 0, 1);
-				if (buf[0] != 0) {
-					int pos = device.read(buf, 1, 14);
-					// System.out.println("go :" + i + " pos:" + pos);
+				device.write(tab);
+
+				while (true) {
+					int res = device.read(buf, 0, 1);
+					if (buf[0] != 0) {
+						int pos = device.read(buf, 1, 14);
+						// System.out.println("go :" + i + " pos:" + pos);
+						break;
+					}
+				}
+
+				if (buf[0] == 0x03) {
 					break;
 				}
 			}
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
