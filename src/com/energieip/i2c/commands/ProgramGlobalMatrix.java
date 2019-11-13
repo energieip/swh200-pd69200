@@ -236,9 +236,10 @@ public class ProgramGlobalMatrix {
 				System.out.println("Moving temporary matrix...");
 				pd69200.pse_program_global_matrix();
 				System.out.println("Wait while reboot is complete...");
-				Thread.sleep(5);
+				Thread.sleep(5000);
 				System.out.println("Saving to memory...");
 				pd69200.pse_save_system_settings();
+				Thread.sleep(2000);				
 				System.out.println("Matrix updated, reading matrix...");			
 				for (int i = 0; i < 48; i++) {
 					byte[] buf = pd69200.pse_get_physical_port_number_from_active_matrix((byte)i);
@@ -254,9 +255,10 @@ public class ProgramGlobalMatrix {
 				System.out.println("Moving temporary matrix...");
 				pd69200.pse_program_global_matrix();
 				System.out.println("Wait while reboot is complete...");
-				Thread.sleep(5);
+				Thread.sleep(5000);
 				System.out.println("Saving to memory...");
 				pd69200.pse_save_system_settings();
+				Thread.sleep(2000);
 				System.out.println("Matrix updated, reading matrix...");			
 				for (int i = 0; i < 48; i++) {
 					byte[] buf = pd69200.pse_get_physical_port_number_from_active_matrix((byte)i);
