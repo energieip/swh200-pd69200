@@ -122,8 +122,7 @@ public class ProgramGlobalMatrix {
 		matrix_3_boards[46][1] = -1;
 		matrix_3_boards[47][0] = -1;
 		matrix_3_boards[47][1] = -1;
-		matrix_3_boards[48][0] = -1;
-		matrix_3_boards[48][1] = -1;
+
 		
 		
 		byte[][] matrix_4_boards = new byte[48][2];
@@ -223,8 +222,7 @@ public class ProgramGlobalMatrix {
 		matrix_4_boards[46][1] = -1;
 		matrix_4_boards[47][0] = -1;
 		matrix_4_boards[47][1] = -1;
-		matrix_4_boards[48][0] = -1;
-		matrix_4_boards[48][1] = -1;
+
 	
 		byte[][] matrix = new byte[48][2];
 		
