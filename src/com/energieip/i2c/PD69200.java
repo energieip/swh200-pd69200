@@ -9,7 +9,7 @@ import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
 
 public class PD69200 {
-	
+
 	// API VERSION
 	public final String VERSION = "3.45";
 
@@ -25,12 +25,11 @@ public class PD69200 {
 	// message tab
 	private byte[] tab = new byte[15]; // output buffer tab
 	private byte echo = 0;
-	private byte[] buf = new byte[15]; // input buffer tab
 
 	// const
 	final int POWER_MAX = 6000;
 	final int POWER_MIN = 0;
-	
+
 	// debug
 	boolean DEBUG = false;
 
@@ -42,10 +41,10 @@ public class PD69200 {
 	public PD69200(int _i2c_bus) {
 
 		i2c_bus = _i2c_bus;
-		
+
 		// initialize I2C
 		initi2c();
-		
+
 		// first command, initialize echo
 		pse_get_software_version();
 
@@ -57,11 +56,11 @@ public class PD69200 {
 	private void initi2c() {
 		int[] ids;
 		try {
-			if(DEBUG){
+			if (DEBUG) {
 				System.out.println("Initializing I2C...");
 			}
 			ids = I2CFactory.getBusIds();
-			if(DEBUG){
+			if (DEBUG) {
 				System.out.println("Found I2C bus: " + Arrays.toString(ids));
 			}
 			if (i2c_bus == 0) {
@@ -72,7 +71,7 @@ public class PD69200 {
 				System.err.println("[ERROR], bad I2C bus");
 				System.exit(0);
 			}
-			if(DEBUG){
+			if (DEBUG) {
 				System.out.println("Working with I2C bus " + bus.getBusNumber());
 			}
 			i2c = I2CFactory.getInstance(bus.getBusNumber());
@@ -86,7 +85,6 @@ public class PD69200 {
 			e.printStackTrace();
 		}
 	} // end of init
-
 
 	private byte[] pse_set_temporary_matrix(byte get_echo, byte l) {
 
@@ -136,12 +134,6 @@ public class PD69200 {
 
 	}
 
-	/**
-	 * set PSE unlimited
-	 * 
-	 * @param echo
-	 * @return
-	 */
 	private byte[] pse_force_power(byte echo) {
 
 		tab[0] = (byte) 0x00; // command
@@ -339,109 +331,96 @@ public class PD69200 {
 		return tab;
 	}
 
-	/**
-	 * pse_save_system_settings
-	 * @return boolean
-	 */
 	public boolean pse_save_system_settings() {
 
 		// must wait 50ms before using I2C when sending this command
 		// response should come after 50ms
-		
-		try{
-		tab[0] = (byte) 0x1; // program
-		tab[1] = get_echo();
-		tab[2] = (byte) 0x06;
-		tab[3] = (byte) 0x0F; // save config
-		tab[4] = (byte) 0x4E;
-		tab[5] = (byte) 0x4E;
-		tab[6] = (byte) 0x4E;
-		tab[7] = (byte) 0x4E;
-		tab[8] = (byte) 0x4E;
-		tab[9] = (byte) 0x4E;
-		tab[10] = (byte) 0x4E;
-		tab[11] = (byte) 0x4E;
-		tab[12] = (byte) 0x4E;
-		tab[13] = (byte) 0x00;
-		tab[14] = (byte) 0x00;
 
-		tab = checksum(tab);
-		
-		device.write(tab);
+		try {
+			tab[0] = (byte) 0x1; // program
+			tab[1] = get_echo();
+			tab[2] = (byte) 0x06;
+			tab[3] = (byte) 0x0F; // save config
+			tab[4] = (byte) 0x4E;
+			tab[5] = (byte) 0x4E;
+			tab[6] = (byte) 0x4E;
+			tab[7] = (byte) 0x4E;
+			tab[8] = (byte) 0x4E;
+			tab[9] = (byte) 0x4E;
+			tab[10] = (byte) 0x4E;
+			tab[11] = (byte) 0x4E;
+			tab[12] = (byte) 0x4E;
+			tab[13] = (byte) 0x00;
+			tab[14] = (byte) 0x00;
+
+			tab = checksum(tab);
+
+			device.write(tab);
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
+		}
 		return true;
 	}
-	
 
-	/**
-	 * Reset PSE
-	 * @return boolean
-	 */
 	public boolean pse_reset_command() {
 
-		try{
-		tab[0] = (byte) 0x0; // command
-		tab[1] = get_echo();
-		tab[2] = (byte) 0x07; // gloabl
-		tab[3] = (byte) 0x55; // reset
-		tab[4] = (byte) 0x00;
-		tab[5] = (byte) 0x55; // reset
-		tab[6] = (byte) 0x00;
-		tab[7] = (byte) 0x55; // reset
-		tab[8] = (byte) 0x4E;
-		tab[9] = (byte) 0x4E;
-		tab[10] = (byte) 0x4E;
-		tab[11] = (byte) 0x4E;
-		tab[12] = (byte) 0x4E;
-		tab[13] = (byte) 0x00;
-		tab[14] = (byte) 0x00;
+		try {
+			tab[0] = (byte) 0x0; // command
+			tab[1] = get_echo();
+			tab[2] = (byte) 0x07; // gloabl
+			tab[3] = (byte) 0x55; // reset
+			tab[4] = (byte) 0x00;
+			tab[5] = (byte) 0x55; // reset
+			tab[6] = (byte) 0x00;
+			tab[7] = (byte) 0x55; // reset
+			tab[8] = (byte) 0x4E;
+			tab[9] = (byte) 0x4E;
+			tab[10] = (byte) 0x4E;
+			tab[11] = (byte) 0x4E;
+			tab[12] = (byte) 0x4E;
+			tab[13] = (byte) 0x00;
+			tab[14] = (byte) 0x00;
 
-		tab = checksum(tab);
-		
-		device.write(tab);
+			tab = checksum(tab);
+
+			device.write(tab);
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
+		}
 		return true;
 	}
-	
-	/**
-	 * pse_restore_factory_default
-	 * @return boolean
-	 */
+
 	public boolean pse_restore_factory_default() {
 
-		try{
-		tab[0] = (byte) 0x01; // program
-		tab[1] = get_echo();
-		tab[2] = (byte) 0x2D; // restore factory default
-		tab[3] = (byte) 0x4E; 
-		tab[4] = (byte) 0x4E;
-		tab[5] = (byte) 0x4E;
-		tab[6] = (byte) 0x4E;
-		tab[7] = (byte) 0x4E; 
-		tab[8] = (byte) 0x4E;
-		tab[9] = (byte) 0x4E;
-		tab[10] = (byte) 0x4E;
-		tab[11] = (byte) 0x4E;
-		tab[12] = (byte) 0x4E;
-		tab[13] = (byte) 0x00;
-		tab[14] = (byte) 0x00;
+		try {
+			tab[0] = (byte) 0x01; // program
+			tab[1] = get_echo();
+			tab[2] = (byte) 0x2D; // restore factory default
+			tab[3] = (byte) 0x4E;
+			tab[4] = (byte) 0x4E;
+			tab[5] = (byte) 0x4E;
+			tab[6] = (byte) 0x4E;
+			tab[7] = (byte) 0x4E;
+			tab[8] = (byte) 0x4E;
+			tab[9] = (byte) 0x4E;
+			tab[10] = (byte) 0x4E;
+			tab[11] = (byte) 0x4E;
+			tab[12] = (byte) 0x4E;
+			tab[13] = (byte) 0x00;
+			tab[14] = (byte) 0x00;
 
-		tab = checksum(tab);
-		
-		device.write(tab);
+			tab = checksum(tab);
+
+			device.write(tab);
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
+		}
 		return true;
 	}
 
@@ -467,73 +446,19 @@ public class PD69200 {
 
 		return tab;
 	}
-	
-	/**
-	 * return PSE total power
-	 * @return int
-	 */
+
 	public int pse_get_total_power() {
 		
+		byte[] buf = new byte[15]; // input buffer tab
 		int power = 0;
 
 		try {
 
-		tab[0] = (byte) 0x02; // command
-		tab[1] = echo;
-		tab[2] = (byte) 0x07; // global
-		tab[3] = (byte) 0x0B; // Supply
-		tab[4] = (byte) 0x60; // Total Power
-		tab[5] = (byte) 0x4E;
-		tab[6] = (byte) 0x4E;
-		tab[7] = (byte) 0x4E;
-		tab[8] = (byte) 0x4E;
-		tab[9] = (byte) 0x4E;
-		tab[10] = (byte) 0x4E;
-		tab[11] = (byte) 0x4E;
-		tab[12] = (byte) 0x4E;
-		tab[13] = (byte) 0x00;
-		tab[14] = (byte) 0x00;
-
-		tab = checksum(tab);
-
-		device.write(tab);
-	
-		while (true) {
-			device.read(buf, 0, 1);
-			if (buf[0] != 0) {
-				device.read(buf, 1, 14);
-				break;
-			}
-		}
-
-		if(DEBUG){
-			printBuffer(buf);
-		}
-
-		if (buf[0] == 0x03) { // Telemetry
-			power = ((buf[2] & 0xff) << 8) | (buf[3] & 0xff);	
-		}
-
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-
-	return power;
-}
-	
-	
-	public String pse_get_port_number_from_active_matrix(int channel) {
-
-		int Physical_number_A=0;
-		int Physical_number_B=0;
-		
-		try {
 			tab[0] = (byte) 0x02; // command
-			tab[1] = get_echo();
-			tab[2] = (byte) 0x05; // channel
-			tab[3] = (byte) 0x44; // channel matrix
-			tab[4] = (byte) channel; // channel number
+			tab[1] = echo;
+			tab[2] = (byte) 0x07; // global
+			tab[3] = (byte) 0x0B; // Supply
+			tab[4] = (byte) 0x60; // Total Power
 			tab[5] = (byte) 0x4E;
 			tab[6] = (byte) 0x4E;
 			tab[7] = (byte) 0x4E;
@@ -548,7 +473,7 @@ public class PD69200 {
 			tab = checksum(tab);
 
 			device.write(tab);
-						
+
 			while (true) {
 				device.read(buf, 0, 1);
 				if (buf[0] != 0) {
@@ -557,17 +482,12 @@ public class PD69200 {
 				}
 			}
 
-			if(DEBUG) {
+			if (DEBUG) {
 				printBuffer(buf);
 			}
-			
+
 			if (buf[0] == 0x03) { // Telemetry
-				Physical_number_A = buf[2];
-				Physical_number_B = buf[3];
-				if(DEBUG){
-					System.out.println("Physical_number_A=" + Physical_number_A);
-					System.out.println("Physical_number_B=" + Physical_number_B);
-				}
+				power = ((buf[2] & 0xff) << 8) | (buf[3] & 0xff);
 			}
 
 		} catch (IOException e) {
@@ -575,16 +495,57 @@ public class PD69200 {
 			e.printStackTrace();
 		}
 
-		return Integer.toString(Physical_number_A)+" "+Integer.toString(Physical_number_B);
+		return power;
 	}
-	
-	
+
+	public byte[] pse_get_physical_port_number_from_active_matrix(byte logical_port) {
+		
+		byte[] buf = new byte[15]; // input buffer tab
+		
+		try{
+			tab[0] = (byte) 0x02; // command
+			tab[1] = get_echo();
+			tab[2] = (byte) 0x05; // channel
+			tab[3] = (byte) 0x44; // channel matrix
+			tab[4] = (byte) logical_port; // channel number
+			tab[5] = (byte) 0x4E;
+			tab[6] = (byte) 0x4E;
+			tab[7] = (byte) 0x4E;
+			tab[8] = (byte) 0x4E;
+			tab[9] = (byte) 0x4E;
+			tab[10] = (byte) 0x4E;
+			tab[11] = (byte) 0x4E;
+			tab[12] = (byte) 0x4E;
+			tab[13] = (byte) 0x00;
+			tab[14] = (byte) 0x00;
+			
+			tab = checksum(tab);
+			
+			device.write(tab);
+			
+			while (true) {
+				int res = device.read(buf, 0, 1);
+				if (buf[0] != 0) {
+					int pos = device.read(buf, 1, 14);
+					// System.out.println("go :" + i + " pos:" + pos);
+					break;
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return buf;
+	}
+
 	public String pse_get_BT_class_power(int class_type) {
 
-		int class_power_value=0;
-		int added_class_power_value=0;
-		int max_added_class_power_value=0;
-		
+		byte[] buf = new byte[15]; // input buffer tab
+		int class_power_value = 0;
+		int added_class_power_value = 0;
+		int max_added_class_power_value = 0;
+
 		try {
 			tab[0] = (byte) 0x02; // command
 			tab[1] = get_echo();
@@ -607,7 +568,7 @@ public class PD69200 {
 			device.write(tab);
 
 			int i = 1;
-			
+
 			while (true) {
 				int res = device.read(buf, 0, 1);
 				if (buf[0] != 0) {
@@ -616,18 +577,18 @@ public class PD69200 {
 				}
 			}
 
-			if(DEBUG) {
+			if (DEBUG) {
 				printBuffer(buf);
 			}
-			
+
 			if (buf[0] == 0x03) { // Telemetry
 				class_power_value = ((buf[2] & 0xff) << 8) | (buf[3] & 0xff);
 				added_class_power_value = buf[4];
 				max_added_class_power_value = buf[5];
-				if(DEBUG){
+				if (DEBUG) {
 					System.out.println("AddedClassPowerValue=" + class_power_value);
 					System.out.println("AddedClassPowerValue=" + buf[4]);
-					System.out.println("MaxAddedClassPowerValue=" + buf[5]);					
+					System.out.println("MaxAddedClassPowerValue=" + buf[5]);
 				}
 			}
 
@@ -636,22 +597,20 @@ public class PD69200 {
 			e.printStackTrace();
 		}
 
-		return Integer.toString(class_power_value)+" "+Integer.toString(added_class_power_value)+" "+Integer.toString(max_added_class_power_value);
+		return Integer.toString(class_power_value) + " " + Integer.toString(added_class_power_value) + " "
+				+ Integer.toString(max_added_class_power_value);
 	}
-	
-	/**
-	 * pse_get_BT_system_status
-	 * @return String
-	 */
-	public String pse_get_BT_system_status() {
 
-		int cpu_status_err_codes=0;
-		int factory_default=0;
-		int RAM_private_label=0;
-		int NVM_user_byte=0;
-		int active_devices=0;
-		int found_devices_after_boot=0;
+	public String pse_get_BT_system_status() {
 		
+		byte[] buf = new byte[15]; // input buffer tab
+		int cpu_status_err_codes = 0;
+		int factory_default = 0;
+		int RAM_private_label = 0;
+		int NVM_user_byte = 0;
+		int active_devices = 0;
+		int found_devices_after_boot = 0;
+
 		try {
 			tab[0] = (byte) 0x02; // request
 			tab[1] = get_echo();
@@ -674,7 +633,7 @@ public class PD69200 {
 			device.write(tab);
 
 			int i = 1;
-			
+
 			while (true) {
 				int res = device.read(buf, 0, 1);
 				if (buf[0] != 0) {
@@ -683,24 +642,24 @@ public class PD69200 {
 				}
 			}
 
-			if(DEBUG) {
+			if (DEBUG) {
 				printBuffer(buf);
 			}
-			
+
 			if (buf[0] == 0x03) { // Telemetry
-				
+
 				cpu_status_err_codes = byteToInt(buf[3]);
 				factory_default = byteToInt(buf[4]);
-				RAM_private_label= byteToInt(buf[6]);
+				RAM_private_label = byteToInt(buf[6]);
 				NVM_user_byte = byteToInt(buf[7]);
 				active_devices = byteToMSB(buf[8]);
 				found_devices_after_boot = byteToLSB(buf[8]);
-				
-				if(DEBUG){
+
+				if (DEBUG) {
 					System.out.println("cpu_status_err_codes=" + cpu_status_err_codes);
 					System.out.println("factory_default=" + factory_default);
-					System.out.println("RAM_private_label=" + RAM_private_label);		
-					System.out.println("NVM_user_byte=" + NVM_user_byte);		
+					System.out.println("RAM_private_label=" + RAM_private_label);
+					System.out.println("NVM_user_byte=" + NVM_user_byte);
 					System.out.println("active_devices=" + active_devices);
 					System.out.println("found_devices_after_boot=" + found_devices_after_boot);
 				}
@@ -711,55 +670,26 @@ public class PD69200 {
 			e.printStackTrace();
 		}
 
-		return Integer.toString(cpu_status_err_codes)+" "+Integer.toString(factory_default)+" "+Integer.toString(RAM_private_label)+" "+Integer.toString(NVM_user_byte)+" "+Integer.toString(active_devices)+" "+Integer.toString(found_devices_after_boot);
-	}
-	
-	// LSB is the right part
-	private int byteToLSB(byte b) {
-		byte result = (byte) (b >>4);
-		return result;
-	}
-	
-	// MSB is the left part
-	private int byteToMSB(byte b) {
-		byte result = (byte) ((b & 0xFF) >> 4);
-		return byteToInt(result);
+		return Integer.toString(cpu_status_err_codes) + " " + Integer.toString(factory_default) + " "
+				+ Integer.toString(RAM_private_label) + " " + Integer.toString(NVM_user_byte) + " "
+				+ Integer.toString(active_devices) + " " + Integer.toString(found_devices_after_boot);
 	}
 
-
-	/**
-	 * byte To Java Int
-	 * @param b byte
-	 * @return int
-	 */
-	private int byteToInt(byte b) {
-		int a=0;
-		a = b;
-		if(a<0){
-			a=a+256;
-		}
-		return a;
-	}
-
-	/**
-	 * pse_get_BT_port_parameters
-	 * @param int port_num
-	 * @return string
-	 */
 	public String pse_get_BT_port_parameters(int port_num) {
 
-		int port_status=0;
-		int port_mode_CFG1=0;
-		int port_mode_CFG2=0;
-		int port_operation_mode=0;
-		int add_power_for_port_mode=0;
-		int priority=0;		
-		
+		byte[] buf = new byte[15]; // input buffer tab
+		int port_status = 0;
+		int port_mode_CFG1 = 0;
+		int port_mode_CFG2 = 0;
+		int port_operation_mode = 0;
+		int add_power_for_port_mode = 0;
+		int priority = 0;
+
 		try {
 			tab[0] = (byte) 0x02; // request
 			tab[1] = get_echo();
 			tab[2] = (byte) 0x05; // channel
-			tab[3] = (byte) 0xC0; // BT Port Config1 
+			tab[3] = (byte) 0xC0; // BT Port Config1
 			tab[4] = (byte) port_num;
 			tab[5] = (byte) 0x4E;
 			tab[6] = (byte) 0x4E;
@@ -773,13 +703,13 @@ public class PD69200 {
 			tab[14] = (byte) 0x00;
 
 			tab = checksum(tab);
-			
-			if(DEBUG){
+
+			if (DEBUG) {
 				printBuffer(tab);
 			}
-			
+
 			device.write(tab);
-			
+
 			while (true) {
 				device.read(buf, 0, 1);
 				if (buf[0] != 0) {
@@ -788,24 +718,24 @@ public class PD69200 {
 				}
 			}
 
-			if(DEBUG) {
+			if (DEBUG) {
 				printBuffer(buf);
 			}
-			
+
 			if (buf[0] == 0x03) { // Telemetry
-				
+
 				port_status = buf[2];
 				port_mode_CFG1 = buf[3];
 				port_mode_CFG2 = buf[4];
 				port_operation_mode = buf[5];
 				add_power_for_port_mode = buf[6];
 				priority = buf[7];
-				
-				if(DEBUG){
+
+				if (DEBUG) {
 					System.out.println("port_status=" + port_status);
 					System.out.println("port_mode_CFG1=" + port_mode_CFG1);
-					System.out.println("port_mode_CFG2=" + port_mode_CFG2);		
-					System.out.println("port_operation_mode=" + port_operation_mode);		
+					System.out.println("port_mode_CFG2=" + port_mode_CFG2);
+					System.out.println("port_operation_mode=" + port_operation_mode);
 					System.out.println("add_power_for_port_mode=" + add_power_for_port_mode);
 					System.out.println("priority=" + priority);
 				}
@@ -816,26 +746,24 @@ public class PD69200 {
 			e.printStackTrace();
 		}
 
-		return Integer.toString(port_status)+" "+Integer.toString(port_mode_CFG1)+" "+Integer.toString(port_mode_CFG2)+" "+Integer.toString(port_operation_mode)+" "+Integer.toString(add_power_for_port_mode)+" "+Integer.toString(priority);
+		return Integer.toString(port_status) + " " + Integer.toString(port_mode_CFG1) + " "
+				+ Integer.toString(port_mode_CFG2) + " " + Integer.toString(port_operation_mode) + " "
+				+ Integer.toString(add_power_for_port_mode) + " " + Integer.toString(priority);
 	}
-	
-	/**
-	 * pse_get_BT_port_status
-	 * @param int port_num
-	 * @return String
-	 */
+
 	public String pse_get_BT_port_status(int port_num) {
 
-		int port_status=0;
-		int port_mode_CFG1=0;
-		int assigned_class=0;
-		int measured_port_power=0;		
-		
+		byte[] buf = new byte[15]; // input buffer tab
+		int port_status = 0;
+		int port_mode_CFG1 = 0;
+		int assigned_class = 0;
+		int measured_port_power = 0;
+
 		try {
 			tab[0] = (byte) 0x02; // request
 			tab[1] = get_echo();
 			tab[2] = (byte) 0x05; // channel
-			tab[3] = (byte) 0xC1; // BT Port status 
+			tab[3] = (byte) 0xC1; // BT Port status
 			tab[4] = (byte) port_num;
 			tab[5] = (byte) 0x4E;
 			tab[6] = (byte) 0x4E;
@@ -849,13 +777,13 @@ public class PD69200 {
 			tab[14] = (byte) 0x00;
 
 			tab = checksum(tab);
-			
-			if(DEBUG){
+
+			if (DEBUG) {
 				printBuffer(tab);
 			}
-			
+
 			device.write(tab);
-			
+
 			while (true) {
 				device.read(buf, 0, 1);
 				if (buf[0] != 0) {
@@ -864,23 +792,22 @@ public class PD69200 {
 				}
 			}
 
-			if(DEBUG) {
+			if (DEBUG) {
 				printBuffer(buf);
 			}
-			
+
 			if (buf[0] == 0x03) { // Telemetry
-				
+
 				port_status = buf[2];
 				port_mode_CFG1 = buf[3];
 				assigned_class = buf[4];
-				measured_port_power = ((buf[5] & 0xff) << 8) | (buf[6] & 0xff);	
-				
-				
-				if(DEBUG){
+				measured_port_power = ((buf[5] & 0xff) << 8) | (buf[6] & 0xff);
+
+				if (DEBUG) {
 					System.out.println("port_status=" + port_status);
 					System.out.println("port_mode_CFG1=" + port_mode_CFG1);
-					System.out.println("assigned_class=" + assigned_class);		
-					System.out.println("measured_port_power=" + measured_port_power);		
+					System.out.println("assigned_class=" + assigned_class);
+					System.out.println("measured_port_power=" + measured_port_power);
 				}
 			}
 
@@ -889,18 +816,13 @@ public class PD69200 {
 			e.printStackTrace();
 		}
 
-		return Integer.toString(port_status)+" "+Integer.toString(port_mode_CFG1)+" "+Integer.toString(assigned_class)+" "+Integer.toString(measured_port_power);
+		return Integer.toString(port_status) + " " + Integer.toString(port_mode_CFG1) + " "
+				+ Integer.toString(assigned_class) + " " + Integer.toString(measured_port_power);
 	}
 
-
-	
-	
-	/**
-	 * return PSE software version
-	 * @return int
-	 */
 	public int pse_get_software_version() {
-
+		
+		byte[] buf = new byte[15]; // input buffer tab
 		int version = 0;
 
 		try {
@@ -925,7 +847,7 @@ public class PD69200 {
 			device.write(tab);
 
 			int i = 1;
-			
+
 			while (true) {
 				int res = device.read(buf, 0, 1);
 				if (buf[0] != 0) {
@@ -935,7 +857,7 @@ public class PD69200 {
 				}
 			}
 
-			if(DEBUG){
+			if (DEBUG) {
 				printBuffer(buf);
 			}
 
@@ -1157,32 +1079,45 @@ public class PD69200 {
 
 		return tab;
 	}
+	
+	
+	
+	
+	// LSB is the right part
+	public int byteToLSB(byte b) {
+		byte result = (byte) (b >> 4);
+		return result;
+	}
 
-	/**
-	 * This method does the checksum
-	 * 
-	 * @param byte[]
-	 * @return byte[]
-	 */
+	// MSB is the left part
+	public int byteToMSB(byte b) {
+		byte result = (byte) ((b & 0xFF) >> 4);
+		return byteToInt(result);
+	}
+
+	public int byteToInt(byte b) {
+		int a = 0;
+		a = b;
+		if (a < 0) {
+			a = a + 256;
+		}
+		return a;
+	}
+
 	private byte[] checksum(byte[] tab) {
 		short checksum = 0;
 		for (int i = 0; i < tab.length - 2; i++) {
 			checksum = (short) (checksum + tab[i]);
-			if(tab[i]<0){
+			if (tab[i] < 0) {
 				checksum = (short) (checksum + 256);
 			}
 		}
 		tab[13] = (byte) ((checksum >> 8) & 0xff);
 		tab[14] = (byte) (checksum & 0xff);
-		
+
 		return tab;
 	} // end of checksum
 
-	/**
-	 * echo++
-	 * 
-	 * @return
-	 */
 	private byte get_echo() {
 		echo++;
 		if (echo > 0x78) {
@@ -1191,12 +1126,8 @@ public class PD69200 {
 		return echo;
 	}
 
-	/**
-	 * print buffer content, debug purpose
-	 * @param byte[]
-	 */
 	@SuppressWarnings("unused")
-	private void printBuffer(byte[] buf2) {
+	public void printBuffer(byte[] buf2) {
 		System.out.println("[DEBUG] **********************");
 		for (int j = 0; j < buf2.length; j++) {
 			System.out.println("[DEBUG] buf[" + j + "]=" + (buf2[j]));
