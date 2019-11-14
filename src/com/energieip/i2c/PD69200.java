@@ -515,7 +515,8 @@ public class PD69200 {
 	public byte[] pse_get_physical_port_number_from_active_matrix(byte logical_port) {
 
 		byte[] buf = new byte[15]; // input buffer tab
-
+		boolean first=true;
+		
 		try {
 			tab[0] = (byte) 0x02; // command
 			tab[1] = get_echo();
@@ -549,11 +550,19 @@ public class PD69200 {
 				}
 
 				if (buf[0] == 0x03) {
-					break;
+					if (!first)
+						break;
+					else
+						first=false;
 				}
+				
+				Thread.sleep(100);
 			}
 
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -773,13 +782,14 @@ public class PD69200 {
 				+ Integer.toString(add_power_for_port_mode) + " " + Integer.toString(priority);
 	}
 
-	public String pse_get_BT_port_status(int port_num) {
+	public byte[] pse_get_BT_port_status(int port_num) {
 
 		byte[] buf = new byte[15]; // input buffer tab
 		int port_status = 0;
 		int port_mode_CFG1 = 0;
 		int assigned_class = 0;
 		int measured_port_power = 0;
+		boolean first = true;
 
 		try {
 			tab[0] = (byte) 0x02; // request
@@ -804,42 +814,38 @@ public class PD69200 {
 				printBuffer(tab);
 			}
 
-			device.write(tab);
+			for (int i = 0; i < 5; i++) { // 5 retry
 
-			while (true) {
-				device.read(buf, 0, 1);
-				if (buf[0] != 0) {
-					device.read(buf, 1, 14);
-					break;
+				device.write(tab);
+
+				while (true) {
+					int res = device.read(buf, 0, 1);
+					if (buf[0] != 0) {
+						int pos = device.read(buf, 1, 14);
+						// System.out.println("go :" + i + " pos:" + pos);
+						break;
+					}
 				}
-			}
 
-			if (DEBUG) {
-				printBuffer(buf);
-			}
-
-			if (buf[0] == 0x03) { // Telemetry
-
-				port_status = buf[2];
-				port_mode_CFG1 = buf[3];
-				assigned_class = buf[4];
-				measured_port_power = ((buf[5] & 0xff) << 8) | (buf[6] & 0xff);
-
-				if (DEBUG) {
-					System.out.println("port_status=" + port_status);
-					System.out.println("port_mode_CFG1=" + port_mode_CFG1);
-					System.out.println("assigned_class=" + assigned_class);
-					System.out.println("measured_port_power=" + measured_port_power);
+				if (buf[0] == 0x03) {
+					if (!first)
+						break;
+					else
+						first=false;
 				}
+				Thread.sleep(100);
 			}
+
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
-		return Integer.toString(port_status) + " " + Integer.toString(port_mode_CFG1) + " "
-				+ Integer.toString(assigned_class) + " " + Integer.toString(measured_port_power);
+		return buf;
 	}
 
 	public int pse_get_software_version() {
