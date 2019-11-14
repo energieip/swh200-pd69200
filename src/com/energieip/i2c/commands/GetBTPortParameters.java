@@ -68,7 +68,7 @@ public class GetBTPortParameters {
 									+ String.format("0x%02X",port_mode_CFG1) + " port_mode_CFG2=" + String.format("0x%02X",port_mode_CFG2) + " port_operation_mode="
 									+ String.format("0x%02X",port_operation_mode) + " port_add_power=" + String.format("0x%02X",port_add_power));
 						} else {
-							System.out.println("[" + secondArg + "] Telemetry error");
+							System.out.println("[" + i + "] Telemetry error");
 						}
 						Thread.sleep(100);
 					}
