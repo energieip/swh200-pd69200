@@ -941,7 +941,6 @@ public class PD69200 {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("returning " + flash_ok);
 		return flash_ok;
 	
 	}

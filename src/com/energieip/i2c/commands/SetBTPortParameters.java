@@ -69,16 +69,16 @@ public class SetBTPortParameters {
 							boolean check = pd69200.pse_set_bt_port_parameters((byte)i, portModeCFG1, portModeCFG2, portOperationMode, portAddPower, portPriority);
 							Thread.sleep(200);	
 							if(check){
-								System.out.println("["+i+"] update succed");
+								//System.out.println("Port ["+i+"] update successful");
 								break;
 							}else{
-								System.out.println("["+i+"] update failed");
-								System.out.println("BAZOOKA #" + j);
+								System.out.println("Port ["+i+"] update failed");
+								//System.out.println("BAZOOKA #" + j);
 							}
 						}
 						
 					}else{
-						System.out.println("["+i+"] update succed");
+						//System.out.println("*Port ["+i+"] update successful");
 					}
 				}
 				System.out.println("done");
