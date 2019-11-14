@@ -34,13 +34,13 @@ public class SetBTPortParameters {
 			PD69200 pd69200 = new PD69200(firstArg);
 			Thread.sleep(50);
 			
-			byte portModeCFG1 = (byte) 0x1; // enable by default
-			byte portModeCFG1_enable = (byte) 0x1;
-			byte portModeCFG1_disable = (byte) 0x0;
-			byte portModeCFG2 = (byte) 0xF;
-			byte portOperationMode = (byte) 0x20;
-			byte portAddPower = (byte) 0x75;
-			byte portPriority = (byte) 0xff;
+			byte portModeCFG1 =  0x1; // enable by default
+			byte portModeCFG1_enable =  0x1;
+			byte portModeCFG1_disable =  0x0;
+			byte portModeCFG2 = 0xF;
+			byte portOperationMode =  0x20;
+			byte portAddPower =  0x75;
+			byte portPriority =  0xF;
 			
 			if(thirdArg==0){
 				portModeCFG1=portModeCFG1_disable;
