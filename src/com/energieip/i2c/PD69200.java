@@ -881,8 +881,6 @@ public class PD69200 {
 	public void pse_set_bt_port_parameters(byte portNum, byte portModeCFG1, byte portModeCFG2, byte portOperationMode,
 			byte portAddPower, byte portPriority) {
 
-		System.out.println("pse_set_bt_port_parameters on port " + portNum + " portModeCFG=" + portModeCFG1);
-
 		try {
 			tab[0] = (byte) 0x00; // command
 			tab[1] = get_echo();
@@ -901,6 +899,12 @@ public class PD69200 {
 			tab[14] = (byte) 0x00;
 
 			tab = checksum(tab);
+			
+			
+			System.out.println("pse_set_bt_port_parameters [" + portNum + "] port_mode_CFG1="
+					+ String.format("0x%02X",tab[5]) + " port_mode_CFG2=" + String.format("0x%02X",tab[6]) + " port_operation_mode="
+					+ String.format("0x%02X",tab[7]) + " port_add_power=" + String.format("0x%02X",tab[8]) + " port_priority=" + String.format("0x%02X",tab[9]));
+
 
 			device.write(tab);
 		} catch (IOException e) {
