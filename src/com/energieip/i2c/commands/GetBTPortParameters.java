@@ -64,7 +64,7 @@ public class GetBTPortParameters {
 							byte port_operation_mode = buf[5];
 							byte port_add_power = buf[6];
 							
-							System.out.println("[" + secondArg + "] port_status=" + String.format("0x%02X",port_status) + " port_mode_CFG1="
+							System.out.println("[" + i + "] port_status=" + String.format("0x%02X",port_status) + " port_mode_CFG1="
 									+ String.format("0x%02X",port_mode_CFG1) + " port_mode_CFG2=" + String.format("0x%02X",port_mode_CFG2) + " port_operation_mode="
 									+ String.format("0x%02X",port_operation_mode) + " port_add_power=" + String.format("0x%02X",port_add_power));
 						} else {
