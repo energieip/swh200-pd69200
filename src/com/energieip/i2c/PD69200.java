@@ -913,11 +913,11 @@ public class PD69200 {
 					break;
 				}else {
 					System.out.println("Retry n°"+i);
-					Thread.sleep(100);
-					if(i==5){
+					Thread.sleep(500);
+					if(i==4){
 						System.out.println("I2C reinit...");
 						this.initi2c();
-						Thread.sleep(500);
+						Thread.sleep(1000);
 					}
 				}
 			}
