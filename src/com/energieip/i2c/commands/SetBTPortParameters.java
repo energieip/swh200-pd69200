@@ -60,25 +60,30 @@ public class SetBTPortParameters {
 					
 				for (int i = 0; i < port_limit; i++) {
 					boolean ok = pd69200.pse_set_bt_port_parameters((byte)i, portModeCFG1, portModeCFG2, portOperationMode, portAddPower, portPriority);
+					//System.out.println("Port ["+i+"] update successful");
 					Thread.sleep(100);				
 					if(!ok){
 						for (int j = 0; j < 5; j++) {
 							pd69200.i2cClose();
 							pd69200 = new PD69200(firstArg);
 							Thread.sleep(100);
-							boolean check = pd69200.pse_set_bt_port_parameters((byte)i, portModeCFG1, portModeCFG2, portOperationMode, portAddPower, portPriority);
+							ok = pd69200.pse_set_bt_port_parameters((byte)i, portModeCFG1, portModeCFG2, portOperationMode, portAddPower, portPriority);
 							Thread.sleep(200);	
-							if(check){
-								//System.out.println("Port ["+i+"] update successful");
+							if(ok){
+								System.out.println("Port ["+i+"] update successful");
 								break;
 							}else{
-								System.out.println("Port ["+i+"] update failed");
+								//System.out.println("Port ["+i+"] update failed");
 								//System.out.println("BAZOOKA #" + j);
 							}
 						}
+						if(!ok){
+							System.out.println("Port ["+i+"] update failed");
+						}
+						
 						
 					}else{
-						//System.out.println("*Port ["+i+"] update successful");
+						System.out.println("*Port ["+i+"] update successful");
 					}
 				}
 				System.out.println("done");
