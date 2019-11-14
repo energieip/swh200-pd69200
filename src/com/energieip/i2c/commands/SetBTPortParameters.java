@@ -83,7 +83,7 @@ public class SetBTPortParameters {
 						
 						
 					}else{
-						System.out.println("*Port ["+i+"] update successful");
+						System.out.println("Port ["+i+"] update successful");
 					}
 				}
 				System.out.println("done");
