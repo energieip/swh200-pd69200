@@ -900,18 +900,27 @@ public class PD69200 {
 
 			tab = checksum(tab);
 			
-			
 			System.out.println("pse_set_bt_port_parameters [" + portNum + "] port_mode_CFG1="
 					+ String.format("0x%02X",tab[5]) + " port_mode_CFG2=" + String.format("0x%02X",tab[6]) + " port_operation_mode="
 					+ String.format("0x%02X",tab[7]) + " port_add_power=" + String.format("0x%02X",tab[8]) + " port_priority=" + String.format("0x%02X",tab[9]));
-
-
-			device.write(tab);
+			
+			for (int i = 0; i < 5; i++) {
+				device.write(tab);
+				byte [] buffer = pse_get_BT_port_parameters(portNum);
+				if(buffer[3]==portModeCFG1){
+					break;
+				}else {
+					System.out.println("Retry n°"+i);
+					Thread.sleep(100);
+				}
+			}		
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
 	}
 
 	private byte[] pse_get_power_supply_voltage(byte echo) {
