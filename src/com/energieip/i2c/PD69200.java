@@ -882,6 +882,8 @@ public class PD69200 {
 	public void pse_set_bt_port_parameters(byte portNum, byte portModeCFG1, byte portModeCFG2, byte portOperationMode,
 			byte portAddPower, byte portPriority) {
 		
+		System.out.println("pse_set_bt_port_parameters on port " + portNum);
+		
 		try {
 			tab[0] = (byte) 0x00; // command
 			tab[1] = get_echo();
