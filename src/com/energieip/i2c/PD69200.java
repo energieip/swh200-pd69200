@@ -706,15 +706,10 @@ public class PD69200 {
 				+ Integer.toString(active_devices) + " " + Integer.toString(found_devices_after_boot);
 	}
 
-	public String pse_get_BT_port_parameters(int port_num) {
+	public byte[] pse_get_BT_port_parameters(int port_num) {
 
 		byte[] buf = new byte[15]; // input buffer tab
-		int port_status = 0;
-		int port_mode_CFG1 = 0;
-		int port_mode_CFG2 = 0;
-		int port_operation_mode = 0;
-		int add_power_for_port_mode = 0;
-		int priority = 0;
+		boolean first = true;
 
 		try {
 			tab[0] = (byte) 0x02; // request
@@ -735,60 +730,43 @@ public class PD69200 {
 
 			tab = checksum(tab);
 
-			if (DEBUG) {
-				printBuffer(tab);
-			}
+			for (int i = 0; i < 5; i++) { // 5 retry
 
-			device.write(tab);
+				device.write(tab);
 
-			while (true) {
-				device.read(buf, 0, 1);
-				if (buf[0] != 0) {
-					device.read(buf, 1, 14);
-					break;
+				while (true) {
+					int res = device.read(buf, 0, 1);
+					if (buf[0] != 0) {
+						int pos = device.read(buf, 1, 14);
+						// System.out.println("go :" + i + " pos:" + pos);
+						break;
+					}
 				}
-			}
 
-			if (DEBUG) {
-				printBuffer(buf);
-			}
-
-			if (buf[0] == 0x03) { // Telemetry
-
-				port_status = buf[2];
-				port_mode_CFG1 = buf[3];
-				port_mode_CFG2 = buf[4];
-				port_operation_mode = buf[5];
-				add_power_for_port_mode = buf[6];
-				priority = buf[7];
-
-				if (DEBUG) {
-					System.out.println("port_status=" + port_status);
-					System.out.println("port_mode_CFG1=" + port_mode_CFG1);
-					System.out.println("port_mode_CFG2=" + port_mode_CFG2);
-					System.out.println("port_operation_mode=" + port_operation_mode);
-					System.out.println("add_power_for_port_mode=" + add_power_for_port_mode);
-					System.out.println("priority=" + priority);
+				if (buf[0] == 0x03) {
+					if (!first)
+						break;
+					else
+						first=false;
 				}
+				
+				Thread.sleep(100);
 			}
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
-		return Integer.toString(port_status) + " " + Integer.toString(port_mode_CFG1) + " "
-				+ Integer.toString(port_mode_CFG2) + " " + Integer.toString(port_operation_mode) + " "
-				+ Integer.toString(add_power_for_port_mode) + " " + Integer.toString(priority);
+		return buf;
 	}
 
 	public byte[] pse_get_BT_port_status(int port_num) {
 
 		byte[] buf = new byte[15]; // input buffer tab
-		int port_status = 0;
-		int port_mode_CFG1 = 0;
-		int assigned_class = 0;
-		int measured_port_power = 0;
 		boolean first = true;
 
 		try {
@@ -900,7 +878,40 @@ public class PD69200 {
 
 		return version;
 	}
+	
+	public void pse_set_bt_port_parameters(byte portNum, byte portModeCFG1, byte portModeCFG2, byte portOperationMode,
+			byte portAddPower, byte portPriority) {
+		
+		try {
+			tab[0] = (byte) 0x00; // command
+			tab[1] = get_echo();
+			tab[2] = (byte) 0x05; // channel
+			tab[3] = (byte) 0xC0; // BT Port Config 1
+			tab[4] =  portNum;
+			tab[5] = portModeCFG1;
+			tab[6] = portModeCFG2;
+			tab[7] = portOperationMode;
+			tab[8] = portAddPower;
+			tab[9] = portPriority;
+			tab[10] = (byte) 0x4E;
+			tab[11] = (byte) 0x4E;
+			tab[12] = (byte) 0x4E;
+			tab[13] = (byte) 0x00;
+			tab[14] = (byte) 0x00;
 
+			tab = checksum(tab);
+
+			
+				device.write(tab);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		
+		
+	}
+	
 	private byte[] pse_get_power_supply_voltage(byte echo) {
 
 		tab[0] = (byte) 0x02; // command
@@ -1160,6 +1171,8 @@ public class PD69200 {
 		System.out.println("[DEBUG] **********************");
 
 	} // end of printBuffer
+
+	
 
 } // end of class
 
