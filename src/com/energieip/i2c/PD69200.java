@@ -515,8 +515,8 @@ public class PD69200 {
 	public byte[] pse_get_physical_port_number_from_active_matrix(byte logical_port) {
 
 		byte[] buf = new byte[15]; // input buffer tab
-		boolean first=true;
-		
+		boolean first = true;
+
 		try {
 			tab[0] = (byte) 0x02; // command
 			tab[1] = get_echo();
@@ -553,9 +553,9 @@ public class PD69200 {
 					if (!first)
 						break;
 					else
-						first=false;
+						first = false;
 				}
-				
+
 				Thread.sleep(100);
 			}
 
@@ -747,9 +747,9 @@ public class PD69200 {
 					if (!first)
 						break;
 					else
-						first=false;
+						first = false;
 				}
-				
+
 				Thread.sleep(100);
 			}
 
@@ -809,11 +809,10 @@ public class PD69200 {
 					if (!first)
 						break;
 					else
-						first=false;
+						first = false;
 				}
 				Thread.sleep(100);
 			}
-
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -878,18 +877,18 @@ public class PD69200 {
 
 		return version;
 	}
-	
+
 	public void pse_set_bt_port_parameters(byte portNum, byte portModeCFG1, byte portModeCFG2, byte portOperationMode,
 			byte portAddPower, byte portPriority) {
-		
+
 		System.out.println("pse_set_bt_port_parameters on port " + portNum + " portModeCFG=" + portModeCFG1);
-		
+
 		try {
 			tab[0] = (byte) 0x00; // command
 			tab[1] = get_echo();
 			tab[2] = (byte) 0x05; // channel
 			tab[3] = (byte) 0xC0; // BT Port Config 1
-			tab[4] =  portNum;
+			tab[4] = portNum;
 			tab[5] = portModeCFG1;
 			tab[6] = portModeCFG2;
 			tab[7] = portOperationMode;
@@ -903,17 +902,14 @@ public class PD69200 {
 
 			tab = checksum(tab);
 
-			
-				device.write(tab);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			device.write(tab);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-		
-		
 	}
-	
+
 	private byte[] pse_get_power_supply_voltage(byte echo) {
 
 		tab[0] = (byte) 0x02; // command
@@ -1173,8 +1169,6 @@ public class PD69200 {
 		System.out.println("[DEBUG] **********************");
 
 	} // end of printBuffer
-
-	
 
 } // end of class
 
