@@ -55,7 +55,7 @@ public class GetBTPortParameters {
 					port_limit=24;}
 				
 					for (int i = 0; i < port_limit; i++) {
-						byte[] buf = pd69200.pse_get_BT_port_status(i);
+						byte[] buf = pd69200.pse_get_BT_port_parameters(i);
 						if (buf[0] == 0x03) { // Telemetry
 
 							byte port_status = buf[2];
