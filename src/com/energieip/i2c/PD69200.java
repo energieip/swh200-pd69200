@@ -49,6 +49,18 @@ public class PD69200 {
 		pse_get_software_version();
 
 	} // end of constructor
+	
+	public void i2cClose() {
+		
+		try {
+			i2c.close();
+			bus.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+		}
+		
+	}
 
 	/**
 	 * initialize I2C
@@ -74,6 +86,7 @@ public class PD69200 {
 			if (DEBUG) {
 				System.out.println("Working with I2C bus " + bus.getBusNumber());
 			}
+			
 			i2c = I2CFactory.getInstance(bus.getBusNumber());
 			device = i2c.getDevice(PD69200_ADDR);
 
@@ -878,9 +891,11 @@ public class PD69200 {
 		return version;
 	}
 
-	public void pse_set_bt_port_parameters(byte portNum, byte portModeCFG1, byte portModeCFG2, byte portOperationMode,
+	public boolean pse_set_bt_port_parameters(byte portNum, byte portModeCFG1, byte portModeCFG2, byte portOperationMode,
 			byte portAddPower, byte portPriority) {
-
+		
+		boolean flash_ok = false;
+		
 		try {
 			tab[0] = (byte) 0x00; // command
 			tab[1] = get_echo();
@@ -904,8 +919,8 @@ public class PD69200 {
 					+ String.format("0x%02X",tab[5]) + " port_mode_CFG2=" + String.format("0x%02X",tab[6]) + " port_operation_mode="
 					+ String.format("0x%02X",tab[7]) + " port_add_power=" + String.format("0x%02X",tab[8]) + " port_priority=" + String.format("0x%02X",tab[9]));
 			
-			boolean flash_ok = false;
-			for (int i = 0; i < 10; i++) {
+			
+			for (int i = 0; i < 5; i++) {
 				device.write(tab);
 				byte [] buffer = pse_get_BT_port_parameters(portNum);
 				if(buffer[3]==portModeCFG1){
@@ -913,13 +928,7 @@ public class PD69200 {
 					break;
 				}else {
 					System.out.println("Retry n°"+i);
-					Thread.sleep(100);
-					if(i==4){
-						this.i2c.close();
-						initi2c();
-						Thread.sleep(500);
-					}
-					
+					Thread.sleep(100);		
 				}
 			}
 			if(!flash_ok){
@@ -932,6 +941,9 @@ public class PD69200 {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		return flash_ok;
+	
 	}
 
 	private byte[] pse_get_power_supply_voltage(byte echo) {

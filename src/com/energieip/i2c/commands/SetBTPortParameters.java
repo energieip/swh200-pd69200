@@ -59,8 +59,22 @@ public class SetBTPortParameters {
 				}				
 					
 				for (int i = 0; i < port_limit; i++) {
-					pd69200.pse_set_bt_port_parameters((byte)i, portModeCFG1, portModeCFG2, portOperationMode, portAddPower, portPriority);					
-					Thread.sleep(1000);						
+					boolean ok = pd69200.pse_set_bt_port_parameters((byte)i, portModeCFG1, portModeCFG2, portOperationMode, portAddPower, portPriority);
+					Thread.sleep(100);				
+					if(!ok){
+						for (int j = 0; j < 3; j++) {
+							pd69200.i2cClose();
+							pd69200 = new PD69200(firstArg);
+							Thread.sleep(50);
+							ok = pd69200.pse_set_bt_port_parameters((byte)i, portModeCFG1, portModeCFG2, portOperationMode, portAddPower, portPriority);
+							if(ok){
+								break;
+							}else{
+								System.out.println("BAZOOKA #" + j);
+							}
+						}
+						
+					}
 				}
 				System.out.println("done");
 				
