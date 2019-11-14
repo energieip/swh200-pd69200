@@ -914,11 +914,11 @@ public class PD69200 {
 			tab[14] = (byte) 0x00;
 
 			tab = checksum(tab);
-			
+			/*
 			System.out.println("pse_set_bt_port_parameters [" + portNum + "] port_mode_CFG1="
 					+ String.format("0x%02X",tab[5]) + " port_mode_CFG2=" + String.format("0x%02X",tab[6]) + " port_operation_mode="
 					+ String.format("0x%02X",tab[7]) + " port_add_power=" + String.format("0x%02X",tab[8]) + " port_priority=" + String.format("0x%02X",tab[9]));
-			
+			*/
 			
 			for (int i = 0; i < 5; i++) {
 				device.write(tab);
@@ -927,12 +927,12 @@ public class PD69200 {
 					flash_ok=true;
 					break;
 				}else {
-					System.out.println("Retry n°"+i);
+					//System.out.println("Retry n°"+i);
 					Thread.sleep(100);		
 				}
 			}
 			if(!flash_ok){
-				System.out.println("Failed updating port "+portNum);
+				//System.out.println("Failed updating port "+portNum);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
