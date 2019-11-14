@@ -37,9 +37,9 @@ public class SetBTPortParameters {
 			byte portModeCFG1 =  0x1; // enable by default
 			byte portModeCFG1_enable =  0x1;
 			byte portModeCFG1_disable =  0x0;
-			byte portModeCFG2 = 0xF;
+			byte portModeCFG2 = 0x1;
 			byte portOperationMode =  0x20;
-			byte portAddPower =  0x75;
+			byte portAddPower =  0x4B;
 			byte portPriority =  0xF;
 			
 			if(thirdArg==0){
