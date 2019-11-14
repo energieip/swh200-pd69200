@@ -66,8 +66,10 @@ public class SetBTPortParameters {
 							pd69200.i2cClose();
 							pd69200 = new PD69200(firstArg);
 							Thread.sleep(50);
-							ok = pd69200.pse_set_bt_port_parameters((byte)i, portModeCFG1, portModeCFG2, portOperationMode, portAddPower, portPriority);
-							if(ok){
+							boolean check = pd69200.pse_set_bt_port_parameters((byte)i, portModeCFG1, portModeCFG2, portOperationMode, portAddPower, portPriority);
+							Thread.sleep(100);	
+							if(check){
+								System.out.println("mini bazooka ok");
 								break;
 							}else{
 								System.out.println("BAZOOKA #" + j);
