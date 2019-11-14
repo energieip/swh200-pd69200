@@ -913,7 +913,12 @@ public class PD69200 {
 					break;
 				}else {
 					System.out.println("Retry n°"+i);
-					Thread.sleep(i*500);
+					Thread.sleep(100);
+					if(i==5){
+						System.out.println("I2C reinit...");
+						this.initi2c();
+						Thread.sleep(500);
+					}
 				}
 			}
 			if(!flash_ok){
