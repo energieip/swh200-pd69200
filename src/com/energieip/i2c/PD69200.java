@@ -905,7 +905,7 @@ public class PD69200 {
 					+ String.format("0x%02X",tab[7]) + " port_add_power=" + String.format("0x%02X",tab[8]) + " port_priority=" + String.format("0x%02X",tab[9]));
 			
 			boolean flash_ok = false;
-			for (int i = 0; i < 50; i++) {
+			for (int i = 0; i < 5; i++) {
 				device.write(tab);
 				byte [] buffer = pse_get_BT_port_parameters(portNum);
 				if(buffer[3]==portModeCFG1){
@@ -914,6 +914,12 @@ public class PD69200 {
 				}else {
 					System.out.println("Retry n°"+i);
 					Thread.sleep(100);
+					if(i==4){
+						this.i2c.close();
+						initi2c();
+						Thread.sleep(500);
+					}
+					
 				}
 			}
 			if(!flash_ok){
