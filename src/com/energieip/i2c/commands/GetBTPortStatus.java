@@ -64,9 +64,9 @@ public class GetBTPortStatus {
 							int measured_port_power = ((buf[5] & 0xff) << 8) | (buf[6] & 0xff);
 							byte port_event = buf[10];
 
-							System.out.println("[" + i + "] port_status=" + port_status + " port_mode_CFG1="
-									+ port_mode_CFG1 + " assigned_class=" + assigned_class + " measured_port_power="
-									+ measured_port_power + " port_event=" + port_event);
+							System.out.println("[" + i + "] port_status=" + (byte)port_status + " port_mode_CFG1="
+									+ (byte)port_mode_CFG1 + " assigned_class=" + (byte)assigned_class + " measured_port_power="
+									+ measured_port_power + " port_event=" + (byte)port_event);
 						} else {
 							System.out.println("[" + secondArg + "] Telemetry error");
 						}
