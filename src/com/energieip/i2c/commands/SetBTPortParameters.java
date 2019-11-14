@@ -60,10 +60,10 @@ public class SetBTPortParameters {
 					
 				for (int i = 0; i < port_limit; i++) {
 					System.out.println("updating port " + i +"...");
-					pd69200 = new PD69200(firstArg);
-					Thread.sleep(100);
 					pd69200.pse_set_bt_port_parameters((byte)i, portModeCFG1, portModeCFG2, portOperationMode, portAddPower, portPriority);						
-					Thread.sleep(1000);
+					Thread.sleep(100);
+					pd69200.pse_set_bt_port_parameters((byte)i, portModeCFG1, portModeCFG2, portOperationMode, portAddPower, portPriority);
+					Thread.sleep(100);
 				}
 				System.out.println("done");
 				
