@@ -861,6 +861,8 @@ public class PD69200 {
 			tab[14] = (byte) 0x00;
 
 			tab = checksum(tab);
+			
+			System.out.println(tab);
 
 			device.write(tab);
 
