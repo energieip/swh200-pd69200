@@ -862,7 +862,10 @@ public class PD69200 {
 
 			tab = checksum(tab);
 			
-			System.out.println(tab);
+			for (int i = 0; i < tab.length; i++) {
+				System.out.println(String.format("0x%02X",tab[i]));
+			}
+			
 
 			device.write(tab);
 
